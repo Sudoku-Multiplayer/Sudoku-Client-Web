@@ -10,10 +10,11 @@ export class SudokuGame {
     status: GameStatus;
     gameId: string;
     gameName: string;
-    board: number[][];
+    initialBoard: number[][];
+    currentBoard: number[][]
     solution: number[][];
 
-    constructor(hostName: string, boardSize: number, level: Level, playerCount: number, playerLimit: number, status: GameStatus, gameId: string, gameName: string, board: number[][], solution: number[][]) {
+    constructor(hostName: string, boardSize: number, level: Level, playerCount: number, playerLimit: number, status: GameStatus, gameId: string, gameName: string, initialBoard: number[][], currentBoard: number[][], solution: number[][]) {
         this.hostName = hostName;
         this.boardSize = boardSize;
         this.level = level;
@@ -22,7 +23,8 @@ export class SudokuGame {
         this.status = status;
         this.gameId = gameId;
         this.gameName = gameName;
-        this.board = board;
+        this.initialBoard = initialBoard;
+        this.currentBoard = currentBoard;
         this.solution = solution;
     }
 }
