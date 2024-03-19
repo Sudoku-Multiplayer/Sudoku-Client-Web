@@ -1,0 +1,12 @@
+<div id="container">
+    <div id="header">Board Updates</div>
+    <div id="board-update-container">
+            @for (boardUpdate of boardUpdates; track $index) {
+            <div class="message-bubble" [ngClass]="{'sender': boardUpdate.player?.id === currentPlayer?.id}">
+                <div class="player-name">{{boardUpdate.player?.name}}</div>
+                <div class="message">{{boardUpdate.value}} at ({{boardUpdate.row}}, {{boardUpdate.column}})</div>
+            </div>
+            }
+            <div #endOfBoardUpdates></div>
+    </div>
+</div>

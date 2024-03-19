@@ -1,0 +1,68 @@
+#container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+#header {
+    text-align: center;
+    font-style: italic;
+}
+
+#board-update-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    overflow: auto;
+    border-radius: 5%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    margin: 0.2;
+}
+
+#board-update-container> :first-child {
+    margin-top: auto;
+}
+
+.viewport{
+    height: 100%;
+    width: 100%;
+    background-color: black;
+}
+
+.message-bubble {
+    padding: 0.5em;
+    margin-top: 0.1em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    margin-bottom: 0.1em;
+    border-radius: 0.5em;
+    background-color: rgb(122, 137, 248);
+    width: fit-content;
+    max-width: 70%;
+}
+
+.message-bubble.sender {
+    background-color: rgb(5, 219, 2);
+    align-self: end;
+}
+
+.player-name {
+    font-size: 0.8em;
+    background-color: rgb(119, 133, 239);
+    color: rgb(239, 255, 255);
+}
+
+.sender .player-name {
+    font-size: 0.8em;
+    background-color: rgb(3, 206, 0);
+}
+
+.message {
+    font-size: 1em;
+    word-wrap: break-word;
+}
