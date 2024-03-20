@@ -1,0 +1,34 @@
+#board-container {
+  height: 100%;
+  width: 100%;
+  border: 4px solid rgb(174, 174, 0);
+}
+
+.tile {
+  min-width: 0;
+  aspect-ratio: 1;
+  font-weight: bold;
+  text-align: center;
+  font-size: calc(1vw + 1vh);
+  background-color: rgb(236, 255, 253);
+}
+
+.initialTile{
+  background-color: rgb(255, 252, 223);
+}
+
+#spinner-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
