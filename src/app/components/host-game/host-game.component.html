@@ -1,0 +1,64 @@
+<div id="container">
+    <form [formGroup]="hostGameForm" id="host-game-form" (ngSubmit)="submit()">
+        <mat-form-field class="form-field">
+            <mat-label class="label">Player Name:</mat-label>
+            <input matInput formControlName="playerName">
+            <small class="form-error" *ngIf="hostGameForm.controls['playerName'].errors?.['required'] && 
+                hostGameForm.controls['playerName'].touched">
+                Player Name is required.
+            </small>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+            <mat-label class="label">Game Name:</mat-label>
+            <input matInput formControlName="gameName">
+            <small class="form-error" *ngIf="hostGameForm.controls['gameName'].errors?.['required'] && 
+                hostGameForm.controls['gameName'].touched">
+                Game Name is required.
+            </small>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+            <mat-label class="label">Board Size:</mat-label>
+            <input matInput type="number" placeholder="Ex 9" formControlName="boardSize">
+            <small class="form-error" *ngIf="hostGameForm.controls['boardSize'].errors?.['required'] && 
+                hostGameForm.controls['boardSize'].touched">
+                Board Size is required.
+            </small>
+            <small class="form-error" *ngIf="hostGameForm.controls['boardSize'].errors?.['min']">
+                Min value is {{ hostGameForm.controls['boardSize'].errors?.['min'].min }}.
+            </small>
+            <small class="form-error" *ngIf="hostGameForm.controls['boardSize'].errors?.['max']">
+                Max value is {{ hostGameForm.controls['boardSize'].errors?.['max'].max }}.
+            </small>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+            <mat-label class="label">Level</mat-label>
+            <mat-select formControlName="level">
+                @for (level of levels; track level) {
+                <mat-option [value]="level"> {{level}} </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+            <mat-label class="label">Player Limit:</mat-label>
+            <input matInput type="number" placeholder="Ex 4" formControlName="playerLimit">
+            <small class="form-error" *ngIf="hostGameForm.controls['playerLimit'].errors?.['required'] && 
+                hostGameForm.controls['playerLimit'].touched">
+                Board Size is required.
+            </small>
+            <small class="form-error" *ngIf="hostGameForm.controls['playerLimit'].errors?.['min']">
+                Min value is {{ hostGameForm.controls['playerLimit'].errors?.['min'].min }}.
+            </small>
+            <small class="form-error" *ngIf="hostGameForm.controls['playerLimit'].errors?.['max']">
+                Max value is {{ hostGameForm.controls['playerLimit'].errors?.['max'].max }}.
+            </small>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" id="host-button" [disabled]="hostGameForm.invalid"
+            type="submit">Host</button>
+
+    </form>
+</div>
