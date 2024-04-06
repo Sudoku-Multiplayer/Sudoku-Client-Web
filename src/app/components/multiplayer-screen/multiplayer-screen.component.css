@@ -1,0 +1,64 @@
+#container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    background-color: #a09d7a;
+}
+
+#active-game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+    margin-left: 1%;
+}
+
+#game-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    padding: 5px;
+    overflow-y: auto;
+}
+
+#host-container {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    margin-right: 1%;
+}
+
+#host-game-container {
+    flex: 1;
+    height: 100%;
+    width: 100%;
+}
+
+.game-card {
+    background-color: rgb(101, 126, 0);
+}
+
+mat-card-content > p{
+    margin: 0.3em;
+}
+
+mat-card-subtitle{
+    color: black;
+}
+
+.value{
+    color: white;
+}
+
+@media screen and (max-width: 480px) {
+    #container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+}

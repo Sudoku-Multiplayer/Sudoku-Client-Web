@@ -1,0 +1,41 @@
+<div id="container">
+
+    <div id="active-game-container">
+        <h2>Join Game:</h2>
+        @if(activeGameList == null || activeGameList.length === 0){
+        <p>No active games.</p>
+        }
+        @else{
+        <div id="game-card-container">
+            @for (game of activeGameList; track $index) {
+            <mat-card class="game-card">
+                <mat-card-header>
+                    <mat-card-title>Game Name: <span class="value">{{game.gameName}}</span></mat-card-title>
+                    <mat-card-subtitle>Game ID: <span class="value">{{game.gameId}}</span></mat-card-subtitle>
+                    <mat-card-subtitle>Host Name: <span class="value">{{game.hostName}}</span></mat-card-subtitle>
+                </mat-card-header>
+
+                <mat-card-content>
+                    <p> Limit: <span class="value">{{game.playerLimit}}</span></p>
+                    <p>Game Size: <span class="value">{{game.boardSize}}</span></p>
+                    <p>Level: <span class="value">{{getLevelName(game.level)}}</span></p>
+                    <p>Player Count: <span class="value">{{game.playerCount}}</span></p>
+                </mat-card-content>
+
+                <mat-card-actions align="end">
+                    <button mat-raised-button color="accent" (click)="joinGame($index)">Join</button>
+                </mat-card-actions>
+            </mat-card>
+            }
+
+        </div>
+        }
+
+    </div>
+    <div id="host-container">
+        <h2>Host Game:</h2>
+        <div id="host-game-container">
+            <app-host-game></app-host-game>
+        </div>
+    </div>
+</div>
