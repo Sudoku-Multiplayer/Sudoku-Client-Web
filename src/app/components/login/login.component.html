@@ -1,0 +1,74 @@
+<div id="container">
+
+    <div id="wrapper">
+
+        <div id="login-title-container">
+            <p id="login-title">Login</p>
+        </div>
+
+        <div id="login-container">
+
+            <form [formGroup]="loginForm" id="login-form" (ngSubmit)="login()">
+                <mat-form-field>
+                    <mat-label>Email:</mat-label>
+                    <input matInput formControlName="email">
+                    <small class="form-error" *ngIf="loginForm.controls['email'].errors?.['required'] && 
+                        loginForm.controls['email'].touched">
+                        Email is required.
+                    </small>
+                    <small class="form-error" *ngIf="loginForm.controls['email'].errors?.['email']">
+                        Email must be valid.
+                    </small>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Password:</mat-label>
+                    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <small class="form-error" *ngIf="loginForm.controls['password'].errors?.['required'] && 
+                        loginForm.controls['password'].touched">
+                        Password is required.
+                    </small>
+                </mat-form-field>
+
+                <mat-checkbox formControlName="rememberMe">
+                    <p id="remember-me">remember me.</p>
+                </mat-checkbox>
+
+                <button mat-raised-button color="primary" [disabled]="loginForm.invalid" type="submit">Log in</button>
+
+            </form>
+
+            <mat-divider [vertical]="true"></mat-divider>
+
+            <form [formGroup]="guestForm" id="guest-form" (ngSubmit)="guestLogin()">
+
+                <div id="guest-login-title">
+                    or Guest Login
+                </div>
+
+                <mat-form-field>
+                    <mat-label>Guest Name:</mat-label>
+                    <input matInput formControlName="guestName">
+                    <small class="form-error" *ngIf="guestForm.controls['guestName'].errors?.['required'] && 
+                        guestForm.controls['guestName'].touched">
+                        Guest Name is required.
+                    </small>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" [disabled]="guestForm.invalid" type="submit">Continue as
+                    Guest</button>
+
+            </form>
+
+        </div>
+
+        <div id="signup-container">
+            <p>Don't have an account?</p>
+            <button mat-raised-button color="primary" [routerLink]="['/signup']">Signup</button>
+        </div>
+    </div>
+</div>
