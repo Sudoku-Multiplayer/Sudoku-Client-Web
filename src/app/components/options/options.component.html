@@ -1,0 +1,22 @@
+<form [formGroup]="optionsForm" id="options-form" (ngSubmit)="submit()">
+    <mat-form-field>
+        <mat-label>Player Name:</mat-label>
+        <input matInput formControlName="playerName">
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Board Size:</mat-label>
+        <input matInput type="number" placeholder="Ex 9" formControlName="boardSize">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Level</mat-label>
+        <mat-select formControlName="level">
+            @for (level of levels; track level) {
+                <mat-option [value]="level"> {{level}} </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" [disabled]="optionsForm.invalid" type="submit">Start</button>
+
+</form>
