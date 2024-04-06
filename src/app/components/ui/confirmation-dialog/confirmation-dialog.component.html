@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>{{confirmationDialogData.title}}</h2>
+<mat-dialog-content>
+    {{confirmationDialogData.content}}
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-raised-button color="primary" id="no-button" mat-dialog-close (click)="no()">
+        No
+    </button>
+    <button mat-raised-button color="primary" mat-dialog-close cdkFocusInitial (click)="yes()">
+        Yes
+    </button>
+</mat-dialog-actions>

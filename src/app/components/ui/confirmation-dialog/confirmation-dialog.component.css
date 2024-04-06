@@ -1,0 +1,7 @@
+mat-dialog-actions {
+    justify-content: end;
+}
+
+#no-button {
+    margin-right: 2em;
+}
