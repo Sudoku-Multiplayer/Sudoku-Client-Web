@@ -1,0 +1,21 @@
+<div id="container">
+    <div id="settings-container">
+
+        <form [formGroup]="settingsForm" id="settings-form" (ngSubmit)="saveSettings()">
+
+            <mat-form-field>
+                <mat-label>Player Name:</mat-label>
+                <input matInput formControlName="playerName">
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="settingsForm.invalid">
+                Save
+            </button>
+        </form>
+
+        <button id="logout-button" mat-raised-button color="primary" type="submit" (click)="logout()">
+            Log out
+        </button>
+    </div>
+
+</div>

@@ -1,0 +1,32 @@
+#container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: #5c5a46;
+}
+
+#settings-container {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    border-radius: 20px;
+    border: 2px solid rgb(150, 149, 60);
+    height: 25rem;
+    width: 20rem;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(174, 170, 135);
+}
+
+#settings-form{
+    display: flex;
+    flex-direction: column;
+}
+
+#logout-button{
+    position: absolute;
+    bottom: 1em;
+}
