@@ -12,11 +12,9 @@ import { GameService } from '../../services/game.service';
 import { UiUtilService } from '../../services/ui-util.service';
 import { HttpClient } from '@angular/common/http';
 import { CreateGameResponse } from '../../interfaces/create-game-response';
-import { PlayerType } from '../../enums/player-type';
 import { Router } from '@angular/router';
 import { GameType } from '../../enums/game-type';
 import { GameStateService } from '../../services/game-state.service';
-import { JoinOrHost } from '../../enums/join-or-host';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -61,7 +59,9 @@ export class HostGameComponent implements OnInit {
       this.gameService.hostGame(createGameRequest)
         .subscribe({
           next: (createGameResponse: CreateGameResponse) => {
-            this.gameStateService.joinGameAndNavigate(this.currentPlayer, createGameResponse.gameId, JoinOrHost.HOST);
+            this.gameStateService.saveJoinGameId(createGameResponse.gameId);
+            this.gameStateService.saveGameType(GameType.MULTI);
+            this.router.navigate(['game-screen']);
           },
           error: (error) => {
             this.uiUtilService.showSnackBar(error, "Ok", 10);
