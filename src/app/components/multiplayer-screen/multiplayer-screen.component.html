@@ -1,5 +1,9 @@
 <div id="container">
 
+    <div id="online-player-count-container">
+        Online Players: {{onlinePlayerCount}}
+    </div>
+
     <div id="active-game-container">
         <h2>Join Game:</h2>
         @if(activeGameList == null || activeGameList.length === 0){
@@ -12,12 +16,13 @@
                 <mat-card-header>
                     <mat-card-title>Game Name: <span class="value">{{game.gameName}}</span></mat-card-title>
                     <mat-card-subtitle>Game ID: <span class="value">{{game.gameId}}</span></mat-card-subtitle>
-                    <mat-card-subtitle>Host Name: <span class="value">{{game.hostName}}</span></mat-card-subtitle>
+                    <mat-card-subtitle>Host Name: <span
+                            class="value">{{game.hostPlayer.name}}</span></mat-card-subtitle>
                 </mat-card-header>
 
                 <mat-card-content>
                     <p> Limit: <span class="value">{{game.playerLimit}}</span></p>
-                    <p>Game Size: <span class="value">{{game.boardSize}}</span></p>
+                    <p>Board Size: <span class="value">{{game.boardSize}}</span></p>
                     <p>Level: <span class="value">{{getLevelName(game.level)}}</span></p>
                     <p>Player Count: <span class="value">{{game.playerCount}}</span></p>
                 </mat-card-content>
