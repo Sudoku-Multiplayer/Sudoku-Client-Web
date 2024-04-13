@@ -5,7 +5,7 @@ import { Injectable } from "@angular/core";
 })
 export class UtilService {
 
-    public clone2DArray(array: any[][]): any[][] {
+    public static clone2DArray(array: any[][]): any[][] {
         let newArray = new Array(array.length);
         for (let i = 0; i < array.length; i++) {
             newArray[i] = new Array(array[i].length);
