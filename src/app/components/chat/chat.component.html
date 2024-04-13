@@ -5,7 +5,8 @@
         <!--  <mat-list role="list" id="message-list"> -->
         <div id="message-container">
             @for (message of gameChat; track $index) {
-            <div class="message-bubble" [ngClass]="{'sender': message.player.id === currentPlayer?.id}">
+            <div class="message-bubble" [ngClass]="{'sender': message.player.id === currentPlayer?.id && 
+                message.player.playerType === currentPlayer?.playerType}">
                 <div class="player-name">{{message.player.name}}</div>
                 <div class="message">{{message.message}}</div>
             </div>
