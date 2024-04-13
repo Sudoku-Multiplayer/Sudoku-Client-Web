@@ -29,9 +29,11 @@ export class MultiplayerScreenComponent implements OnInit {
   router: Router = inject(Router);
 
   activeGameList!: SudokuGame[];
+  onlinePlayerCount: number = 0;
 
   ngOnInit(): void {
     this.fetchActiveGames();
+    this.fetchOnlinePlayerCount();
   }
 
   fetchActiveGames() {
@@ -70,6 +72,18 @@ export class MultiplayerScreenComponent implements OnInit {
 
   getLevelName(levelKey: string): string {
     return Level[levelKey as keyof typeof Level];
+  }
+
+  fetchOnlinePlayerCount() {
+    this.gameService.fetchOnlinePlayerCount()
+      .subscribe({
+        next: (onlinePlayerCount) => {
+          this.onlinePlayerCount = onlinePlayerCount;
+        },
+        error: (err) => {
+          this.uiUtilService.showSnackBar(err, "Ok", 8);
+        }
+      });
   }
 
 }
