@@ -5,6 +5,12 @@
     background-color: #a09d7a;
 }
 
+#online-player-count-container{
+    position: absolute;
+    margin: 0.2em;
+    font-weight: bold;
+}
+
 #active-game-container {
     display: flex;
     flex-direction: column;
