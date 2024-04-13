@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { MainMenuComponent } from "../main-menu/main-menu.component";
 import { OptionsComponent } from '../options/options.component';
@@ -30,7 +30,7 @@ import { Level } from '../../enums/level';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../ui/confirmation-dialog/confirmation-dialog.component';
-import { WebsocketService } from '../../services/websocket.service';
+import { WebSocketService } from '../../services/web-socket.service';
 
 @Component({
   selector: 'app-game-screen',
@@ -43,7 +43,8 @@ import { WebsocketService } from '../../services/websocket.service';
     ChatComponent,
     BoardUpdatesComponent,
     MatProgressSpinnerModule,
-    MatButtonModule]
+    MatButtonModule,
+    CommonModule]
 })
 export class GameScreenComponent implements OnInit, OnDestroy {
 
@@ -52,7 +53,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   authService: AuthService = inject(AuthService);
   uiUtilService: UiUtilService = inject(UiUtilService);
   gameplayService: GameplayService = inject(GameplayService);
-  websocketService: WebsocketService = inject(WebsocketService);
+  websocketService: WebSocketService = inject(WebSocketService);
   router: Router = inject(Router);
   location: Location = inject(Location);
   serverConfig: ServerConfig = inject(ServerConfig);
@@ -87,19 +88,40 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.gameStateService.getCurrentSudokuGame()) {
+
+    if (this.gameStateService.canEnterGameScreenForSingleplayer() ||
+      this.gameStateService.canEnterGameScreenForMultiplayer()
+    ) {
       this.leaveGame();
     }
+
   }
 
   private init() {
     this.gameType = this.gameStateService.getGameType()!;
 
     if (this.gameType === GameType.MULTI) {
-      this.joinOrHost = this.gameStateService.getJoinOrHost()!;
-      const joinGameResponse: JoinGameResponse | null = this.gameStateService.getJoinGameResponse()!;
-      this.game = joinGameResponse.game;
-      this.startMultiplayerGame();
+      this.isLoading = true;
+
+      this.gameService.joinGame(this.gameStateService.getJoinGameId()!, this.gameStateService.getCurrentPlayer()!)
+        .subscribe({
+          next: (joinGameResponse: JoinGameResponse) => {
+            const gameStatus = GameStatus[joinGameResponse.gameStatus as unknown as keyof typeof GameStatus];
+            if (gameStatus === GameStatus.PLAYER_ADDED || gameStatus === GameStatus.PLAYER_ALREADY_JOINED) {
+              this.game = joinGameResponse.game;
+              this.isLoading = false;
+              this.startMultiplayerGame();
+            }
+            else if (gameStatus === GameStatus.FULL) {
+              this.gameStateService.removeCurrentGameSession();
+              this.location.back();
+              this.uiUtilService.showSnackBar("Game is Full, cannot join", "Ok", 10);
+            }
+          },
+          error: (error) => {
+            this.uiUtilService.showSnackBar(error, "Ok", 10);
+          }
+        });
     }
     else {
       const gameOptions: GameOptions = this.gameStateService.getGameOptions()!;
@@ -120,7 +142,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
             this.isLoading = false;
             const initialBoard: number[][] = UtilService.clone2DArray(gameBoard.board);
             if (this.currentPlayer) {
-              this.game = new SudokuGame(this.currentPlayer.name,
+              this.game = new SudokuGame(this.currentPlayer,
                 gameOptions.boardSize,
                 gameOptions.level as Level,
                 1,
@@ -144,7 +166,6 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   }
 
   private startMultiplayerGame() {
-
     this.gameBoardSubscription = this.gameplayService
       .watchBoardUpdates(this.game.gameId)
       .subscribe((boardUpdate: BoardUpdate) => {
@@ -160,6 +181,8 @@ export class GameScreenComponent implements OnInit, OnDestroy {
       .subscribe((joinedPlayer: Player) => {
         if (this.currentPlayer.id !== joinedPlayer.id ||
           this.currentPlayer.playerType !== joinedPlayer.playerType) {
+          this.game.players.push(joinedPlayer);
+          this.game.playerCount = this.game.players.length;
           this.uiUtilService.showSnackBar(joinedPlayer.name + " joined the game.", "", 4);
         }
       });
@@ -167,8 +190,20 @@ export class GameScreenComponent implements OnInit, OnDestroy {
     this.playerLeftSubscription = this.gameplayService
       .watchPlayerLeft(this.game.gameId)
       .subscribe((leftPlayer: Player) => {
+
         if (this.currentPlayer.id !== leftPlayer.id ||
           this.currentPlayer.playerType !== leftPlayer.playerType) {
+
+          const tempPlayers: Player[] = [];
+          this.game.players.forEach(player => {
+            if (player.id != leftPlayer.id) {
+              tempPlayers.push(player);
+            }
+          });
+
+          this.game.players = tempPlayers;
+          this.game.playerCount = this.game.players.length;
+
           this.uiUtilService.showSnackBar(leftPlayer.name + " left the game.", "", 4);
         }
       });
@@ -275,30 +310,47 @@ export class GameScreenComponent implements OnInit, OnDestroy {
         this.location.back();
       }
     });
-
   }
 
   leaveGame() {
-    if (this.gameType === GameType.SINGLE) {
+    this.gameStateService.removeCurrentGameSession();
+
+    if (this.gameType === GameType.MULTI) {
       this.gameStateService.removeCurrentGameSession();
-    }
-    else {
       this.gameService.leaveGame(this.game.gameId, this.currentPlayer!)
         .subscribe({
           next: () => {
-            this.gameStateService.removeCurrentGameSession();
-
             this.gameBoardSubscription.unsubscribe();
             this.playerJoinedSubscription.unsubscribe();
             this.playerLeftSubscription.unsubscribe();
             this.gameChatSubscription.unsubscribe();
-
           },
           error: (err) => {
             this.uiUtilService.showSnackBar(err, "Ok", 8);
           }
         });
     }
+  }
+
+  isHostPlayer(player: Player): boolean {
+    const hostPlayer: Player = this.game.hostPlayer;
+    if (player.id === hostPlayer.id &&
+      player.playerType === hostPlayer.playerType
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  isCurrentPlayer(player: Player): boolean {
+    if (player.id === this.currentPlayer.id &&
+      player.playerType === this.currentPlayer.playerType
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
 }
