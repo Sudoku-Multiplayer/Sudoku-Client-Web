@@ -7,12 +7,11 @@ import { GameStatus } from '../../enums/game-status';
 import { MatButtonModule } from '@angular/material/button';
 import { HostGameComponent } from '../host-game/host-game.component';
 import { GameStateService } from '../../services/game-state.service';
-import { Player } from '../../models/player.model';
 import { Router } from '@angular/router';
-import { JoinOrHost } from '../../enums/join-or-host';
 import { GameplayService } from '../../services/gameplay.service';
 import { AuthService } from '../../services/auth.service';
 import { Level } from '../../enums/level';
+import { GameType } from '../../enums/game-type';
 
 @Component({
   selector: 'app-multiplayer-screen',
@@ -55,12 +54,18 @@ export class MultiplayerScreenComponent implements OnInit {
   }
 
   joinGame(index: number) {
-    let gameId: string = this.activeGameList[index].gameId;
-    let currentPlayer: Player | null = this.gameStateService.getCurrentPlayer();
 
-    if (currentPlayer) {
-      this.gameStateService.joinGameAndNavigate(currentPlayer, gameId, JoinOrHost.JOIN);
+    const game: SudokuGame = this.activeGameList[index];
+    if (game.playerCount >= game.playerLimit) {
+      this.uiUtilService.showSnackBar("Game is Full, cannot join.", "Ok", 5);
     }
+    else {
+      this.gameStateService.saveJoinGameId(game.gameId);
+      this.gameStateService.saveGameType(GameType.MULTI);
+
+      this.router.navigate(['game-screen']);
+    }
+
   }
 
   getLevelName(levelKey: string): string {
