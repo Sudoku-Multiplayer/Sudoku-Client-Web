@@ -55,7 +55,13 @@ export class HostGameComponent implements OnInit {
     }
 
     if (this.currentPlayer) {
-      const createGameRequest: CreateGameRequest = new CreateGameRequest(this.currentPlayer, formValue.gameName, formValue.boardSize, level, formValue.playerLimit);
+      const createGameRequest: CreateGameRequest = new CreateGameRequest(this.currentPlayer,
+        formValue.gameName,
+        formValue.boardSize,
+        level,
+        formValue.playerLimit,
+        formValue.timeLimit * 60
+      );
       this.gameService.hostGame(createGameRequest)
         .subscribe({
           next: (createGameResponse: CreateGameResponse) => {
@@ -74,12 +80,16 @@ export class HostGameComponent implements OnInit {
     this.levels = Object.values(Level);
 
     this.hostGameForm = new FormGroup({
-      playerName: new FormControl('', Validators.required),
-      gameName: new FormControl('', Validators.required),
+      gameName: new FormControl(this.getDefaultGameName(), Validators.required),
       boardSize: new FormControl('9', [Validators.required, Validators.min(4), Validators.max(9)]),
       level: new FormControl(Level.EASY),
-      playerLimit: new FormControl('', [Validators.required, Validators.min(2), Validators.max(5)]),
+      playerLimit: new FormControl('5', [Validators.required, Validators.min(2), Validators.max(5)]),
+      timeLimit: new FormControl('5', [Validators.required, Validators.min(1), Validators.max(10)])
     });
+  }
+
+  getDefaultGameName(): string {
+    return this.gameStateService.getCurrentPlayer()!.name + "'s game";
   }
 
 }
