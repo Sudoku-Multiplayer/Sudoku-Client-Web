@@ -12,34 +12,100 @@
         </div>
         }
         @else{
-        <div id="game-info-contatiner">
+        <div id="game-info-container">
             <div id="game-info-title">
-                {{game.gameName}} - {{game.level}}
+                
+                <div id="game-info-title-game-name">
+                    {{game.gameName}}
+                </div>
+                <div id="game-info-title-game-level">
+                    {{game.level}}
+                </div>
+                <div id="game-info-title-time-container">
+
+                    @if(isGameStatus(gameStatusType.FINISHED)){
+                        {{gameScreenMessage}}
+                    }
+                    @else{
+                        {{timeRemainingMin}} :
+                        @if (timeRemainingSec < 10) {
+                            0{{timeRemainingSec}} 
+                        } 
+                        @else{ 
+                            {{timeRemainingSec}} 
+                        } 
+                    } 
+                </div>
+
+                </div>
+
+                <div id="game-info-body">
+                    <div id="joined-player-count">
+                        Joined Players: {{game.playerCount}}
+                    </div>
+                    <div id="players-contatiner">
+                        @for (player of game.players; track $index) {
+                        <div class="player-info-box"
+                            [ngClass]="{'current-player': isCurrentPlayer(player), 'host-player': isHostPlayer(player)}">
+                            {{player.name}}
+                        </div>
+                        }
+                    </div>
+                </div>
             </div>
-            <div id="game-info-body">
-                Joined Players: {{game.playerCount}} <br>
-                @for (player of game.players; track $index) {
-                {{player.name}},
-                }
+
+            <div id="main-game-screen-container">
+                <div id="board-control-container">
+
+                    @if(isCurrentPlayer(game.hostPlayer)){
+                    <button mat-raised-button color="accent" class="board-control-button" id="start-game-button"
+                        (click)="startGame()">
+                        Start
+                    </button>
+                    }
+
+                    <button mat-raised-button color="accent" class="board-control-button" id="pause-game-button"
+                        (click)="pauseGame()">
+                        Pause
+                    </button>
+
+                    <button mat-raised-button color="accent" class="board-control-button" id="resume-game-button"
+                        (click)="resumeGame()">
+                        Resume
+                    </button>
+
+                    <button mat-raised-button color="accent" class="board-control-button" id="leave-game-button"
+                        (click)="submitGame()">
+                        Submit
+                    </button>
+
+                    <button mat-raised-button color="accent" class="board-control-button" id="leave-game-button"
+                        (click)="leaveGameButtonClick()">
+                        Leave
+                    </button>
+                </div>
+
+                <div id="game-screen-container">
+                    @if(isGameStatus(gameStatusType.NEW) || isGameStatus(gameStatusType.PAUSED)){
+                    <div id="game-screen-message-container">
+                        {{gameScreenMessage}}
+                    </div>
+                    }
+                    @else{
+                    <app-game-board id="game-board" [initialBoard]="game.initialBoard"
+                        [currentBoard]="game.currentBoard" [solution]="game.solution"
+                        (boardUpdateEvent)="onBoardUpdateFromChild($event)">
+                    </app-game-board>
+                    }
+                </div>
+
             </div>
+
+            }
+
         </div>
 
-        <div id="main-game-board-container">
-            <div id="board-control-container">
-                <button mat-raised-button color="accent" id="leave-game-button" (click)="leaveGameButtonClick()">
-                    Leave Game
-                </button>
-            </div>
-            <div id="game-board-container">
-                <app-game-board id="game-board" [initialBoard]="game.initialBoard" [currentBoard]="game.currentBoard"
-                    [solution]="game.solution" (boardUpdateEvent)="onBoardUpdateFromChild($event)">
-                </app-game-board>
-            </div>
+        <div id="chat-container">
+            <app-chat #chat [gameChat]="gameChat" (messageEvent)="onPlayerMessage($event)"></app-chat>
         </div>
-        }
     </div>
-
-    <div id="chat-container">
-        <app-chat #chat [gameChat]="gameChat" (messageEvent)="onPlayerMessage($event)"></app-chat>
-    </div>
-</div>
