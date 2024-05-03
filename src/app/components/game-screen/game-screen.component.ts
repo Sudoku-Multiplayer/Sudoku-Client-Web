@@ -63,6 +63,9 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   gameChatSubscription!: Subscription;
   playerJoinedSubscription!: Subscription;
   playerLeftSubscription!: Subscription;
+  timeUpdateSubscription!: Subscription;
+  gameSessionStatusUpdateSubscription!: Subscription;
+  gameSessionMessageUpdateSubscription!: Subscription;
 
   gameType!: GameType;
   createGameResponse!: CreateGameResponse;
@@ -72,6 +75,10 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   boardUpdates: BoardUpdate[] = [];
   gameChat: GameChatMessage[] = [];
   boardUpdate!: BoardUpdate;
+  timeRemainingMin: number = 0;
+  timeRemainingSec: number = 0;
+  gameStatusType: typeof GameStatus = GameStatus;
+  gameScreenMessage: string = "";
 
   isLoading!: boolean;
   currentPlayer: Player;
@@ -106,13 +113,20 @@ export class GameScreenComponent implements OnInit, OnDestroy {
       this.gameService.joinGame(this.gameStateService.getJoinGameId()!, this.gameStateService.getCurrentPlayer()!)
         .subscribe({
           next: (joinGameResponse: JoinGameResponse) => {
-            const gameStatus = GameStatus[joinGameResponse.gameStatus as unknown as keyof typeof GameStatus];
-            if (gameStatus === GameStatus.PLAYER_ADDED || gameStatus === GameStatus.PLAYER_ALREADY_JOINED) {
+
+            const gameJoinStatus = GameStatus[joinGameResponse.gameStatus as unknown as keyof typeof GameStatus];
+            if (gameJoinStatus === GameStatus.PLAYER_ADDED || gameJoinStatus === GameStatus.PLAYER_ALREADY_JOINED) {
               this.game = joinGameResponse.game;
+              this.timeRemainingMin = Math.floor(this.game.remainingTime / 60);
+              this.timeRemainingSec = this.game.remainingTime % 60;
               this.isLoading = false;
+
+              const gameStatus = GameStatus[this.game.status as unknown as keyof typeof GameStatus];
+              this.setGameScreenMessage(gameStatus);
+
               this.startMultiplayerGame();
             }
-            else if (gameStatus === GameStatus.FULL) {
+            else if (gameJoinStatus === GameStatus.FULL) {
               this.gameStateService.removeCurrentGameSession();
               this.location.back();
               this.uiUtilService.showSnackBar("Game is Full, cannot join", "Ok", 10);
@@ -153,7 +167,9 @@ export class GameScreenComponent implements OnInit, OnDestroy {
                 initialBoard,
                 gameBoard.board,
                 gameBoard.solution,
-                [this.currentPlayer]
+                [this.currentPlayer],
+                5 * 60,
+                5 * 60
               );
               this.gameStateService.saveCurrentSudokuGame(this.game);
             }
@@ -166,6 +182,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   }
 
   private startMultiplayerGame() {
+
     this.gameBoardSubscription = this.gameplayService
       .watchBoardUpdates(this.game.gameId)
       .subscribe((boardUpdate: BoardUpdate) => {
@@ -174,6 +191,19 @@ export class GameScreenComponent implements OnInit, OnDestroy {
         if (this.boardUpdatesViewChild) {
           this.boardUpdatesViewChild.scrollToLastBoardUpdate();
         }
+      });
+
+    this.gameSessionStatusUpdateSubscription = this.gameplayService
+      .watchGameSessionStatusUpdate(this.game.gameId)
+      .subscribe((updatedGameStatus: GameStatus) => {
+        this.game.status = GameStatus[updatedGameStatus as unknown as keyof typeof GameStatus];
+        this.setGameScreenMessage(updatedGameStatus);
+      });
+
+    this.gameSessionMessageUpdateSubscription = this.gameplayService
+      .watchGameSessionMessageUpdate(this.game.gameId)
+      .subscribe((message: string) => {
+        this.uiUtilService.showSnackBar(message, "Ok", 5);
       });
 
     this.playerJoinedSubscription = this.gameplayService
@@ -196,7 +226,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
 
           const tempPlayers: Player[] = [];
           this.game.players.forEach(player => {
-            if (player.id != leftPlayer.id) {
+            if (player.id != leftPlayer.id || player.playerType != leftPlayer.playerType) {
               tempPlayers.push(player);
             }
           });
@@ -213,6 +243,13 @@ export class GameScreenComponent implements OnInit, OnDestroy {
       .subscribe((gameChatMessage: GameChatMessage) => {
         this.chatViewChild.scrollToLastMessage();
         this.gameChat.push(gameChatMessage);
+      });
+
+    this.timeUpdateSubscription = this.gameplayService
+      .watchTimeUpdate(this.game.gameId)
+      .subscribe((updatedTime: number) => {
+        this.timeRemainingMin = Math.floor(updatedTime / 60);
+        this.timeRemainingSec = updatedTime % 60;
       });
 
     this.syncGameChat();
@@ -312,6 +349,51 @@ export class GameScreenComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  startGame() {
+    this.gameplayService.startGame(this.game.gameId)
+      .subscribe({
+        next: () => {
+        },
+        error: (err) => {
+          this.uiUtilService.showSnackBar(err, "Ok", 8);
+        }
+      });
+  }
+
+  stopGame() {
+    this.gameplayService.stopGame(this.game.gameId)
+      .subscribe({
+        next: () => {
+        },
+        error: (err) => {
+          this.uiUtilService.showSnackBar(err, "Ok", 8);
+        }
+      });
+  }
+
+  pauseGame() {
+    this.gameplayService.pauseGame(this.game.gameId)
+      .subscribe({
+        next: () => {
+        },
+        error: (err) => {
+          this.uiUtilService.showSnackBar(err, "Ok", 8);
+        }
+      });
+  }
+
+  resumeGame() {
+    this.gameplayService.resumeGame(this.game.gameId)
+      .subscribe({
+        next: () => {
+        },
+        error: (err) => {
+          this.uiUtilService.showSnackBar(err, "Ok", 8);
+        }
+      });
+  }
+
   leaveGame() {
     this.gameStateService.removeCurrentGameSession();
 
@@ -324,6 +406,9 @@ export class GameScreenComponent implements OnInit, OnDestroy {
             this.playerJoinedSubscription.unsubscribe();
             this.playerLeftSubscription.unsubscribe();
             this.gameChatSubscription.unsubscribe();
+            this.timeUpdateSubscription.unsubscribe();
+            this.gameSessionStatusUpdateSubscription.unsubscribe();
+            this.gameSessionMessageUpdateSubscription.unsubscribe();
           },
           error: (err) => {
             this.uiUtilService.showSnackBar(err, "Ok", 8);
@@ -351,6 +436,28 @@ export class GameScreenComponent implements OnInit, OnDestroy {
     }
 
     return false;
+  }
+
+  isGameStatus(gameStatus: GameStatus): boolean {
+    const current = GameStatus[this.game.status as unknown as keyof typeof GameStatus];
+
+    if (current === gameStatus) {
+      return true;
+    }
+
+    return false;
+  }
+
+  private setGameScreenMessage(gameStatus: GameStatus) {
+    if (gameStatus === GameStatus.NEW) {
+      this.gameScreenMessage = "Game has not started yet."
+    }
+    else if (gameStatus === GameStatus.PAUSED) {
+      this.gameScreenMessage = "Game Paused."
+    }
+    else if (gameStatus === GameStatus.FINISHED) {
+      this.gameScreenMessage = "Game Over!"
+    }
   }
 
 }
