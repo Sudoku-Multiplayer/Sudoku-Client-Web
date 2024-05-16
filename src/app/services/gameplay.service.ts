@@ -8,6 +8,7 @@ import { Player } from '../models/player.model';
 import { WebSocketService } from './web-socket.service';
 import { GameChatMessage } from '../models/game-chat-message.model';
 import { GameSessionStatus } from '../enums/game-session-status';
+import { VoteRecord } from '../models/vote-record.model';
 
 @Injectable({
   providedIn: 'root'
@@ -172,6 +173,47 @@ export class GameplayService {
     return this.websocketService.watch(destination)
       .pipe(map((message: IMessage) => {
         return message.body;
+      })
+      );
+  }
+
+  initiateGameSubmitVoting(gameId: string, player: Player): Observable<boolean> {
+    const url: string = this.serverConfig.GAME_SERVER_URL + "/game-submit-voting/initiate";
+
+    const params = new HttpParams()
+      .set('gameId', gameId);
+
+    return this.httpClient.patch<boolean>(url, player, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  sendGameSubmitVote(gameId: string, voteRecord: VoteRecord): void {
+    const destination = this.serverConfig.GAME_APPLICATION_DESTINATION_PREFIX
+      + "/" + gameId + "/cast-vote";
+
+    this.websocketService.publish(
+      {
+        destination: destination,
+        body: JSON.stringify(voteRecord)
+      });
+  }
+
+  watchGameSubmissionVoteInitiated(gameId: string): Observable<Player> {
+    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/vote-initiated";
+
+    return this.websocketService.watch(destination)
+      .pipe(map((message: IMessage) => {
+        return JSON.parse(message.body);
+      })
+      );
+  }
+
+  watchGameSubmissionVoteCasted(gameId: string): Observable<VoteRecord> {
+    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/vote-casted";
+
+    return this.websocketService.watch(destination)
+      .pipe(map((message: IMessage) => {
+        return JSON.parse(message.body);
       })
       );
   }
