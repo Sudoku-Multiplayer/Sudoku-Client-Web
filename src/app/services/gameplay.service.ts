@@ -7,6 +7,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Player } from '../models/player.model';
 import { WebSocketService } from './web-socket.service';
 import { GameChatMessage } from '../models/game-chat-message.model';
+import { GameSessionStatus } from '../enums/game-session-status';
 
 @Injectable({
   providedIn: 'root'
@@ -140,6 +141,39 @@ export class GameplayService {
 
     return this.httpClient.get<GameChatMessage[]>(url, { params })
       .pipe(catchError(this.handleError));
+  }
+
+  watchTimeUpdate(gameId: string): Observable<number> {
+    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/time-update";
+
+    return this.websocketService.watch(destination)
+      .pipe(map((message: IMessage) => {
+        return Number(message.body);
+      })
+      );
+  }
+
+  watchGameSessionStatusUpdate(gameSessionId: string): Observable<GameSessionStatus> {
+    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameSessionId + "/status-update";
+
+    return this.websocketService.watch(destination)
+      .pipe(map((message: IMessage) => {
+        const gameSessionStatusString: string = message.body.toString().replace(/"/g, '');;
+        const gameSessionStatus: GameSessionStatus = GameSessionStatus[gameSessionStatusString as keyof typeof GameSessionStatus];
+
+        return gameSessionStatus;
+      })
+      );
+  }
+
+  watchGameSessionMessageUpdate(gameId: string): Observable<string> {
+    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/message-update";
+
+    return this.websocketService.watch(destination)
+      .pipe(map((message: IMessage) => {
+        return message.body;
+      })
+      );
   }
 
   private handleError(error: HttpErrorResponse): ObservableInput<any> {
