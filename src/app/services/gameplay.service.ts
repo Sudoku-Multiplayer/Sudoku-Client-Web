@@ -5,7 +5,7 @@ import { BoardUpdate } from '../models/board-update.model';
 import { ServerConfig } from '../configs/server.config';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Player } from '../models/player.model';
-import { WebsocketService } from './websocket.service';
+import { WebSocketService } from './web-socket.service';
 import { GameChatMessage } from '../models/game-chat-message.model';
 
 @Injectable({
@@ -15,41 +15,41 @@ export class GameplayService {
 
   httpClient: HttpClient = inject(HttpClient);
   serverConfig: ServerConfig = inject(ServerConfig);
-  websockerService: WebsocketService = inject(WebsocketService);
+  websocketService: WebSocketService = inject(WebSocketService);
 
   watchBoardUpdates(gameId: string): Observable<BoardUpdate> {
-    const destination = `/game-updates/${gameId}`;
-    return this.websockerService.watch(destination).pipe(
-      map((message: IMessage) => {
+    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/board-update";
+    return this.websocketService.watch(destination)
+      .pipe(map((message: IMessage) => {
         const boardUpdate: BoardUpdate = JSON.parse(message.body);
         return boardUpdate;
       })
-    );
+      );
   }
 
   watchPlayerJoined(gameId: string): Observable<Player> {
-    const destination = `/game-updates/${gameId}/player-joined`;
-    return this.websockerService.watch(destination).pipe(
-      map((message: IMessage) => {
+    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/player-joined";
+    return this.websocketService.watch(destination)
+      .pipe(map((message: IMessage) => {
         const joinedPlayer: Player = JSON.parse(message.body);
         return joinedPlayer;
       })
-    );
+      );
   }
 
   watchPlayerLeft(gameId: string): Observable<Player> {
-    const destination = `/game-updates/${gameId}/player-left`;
-    return this.websockerService.watch(destination).pipe(
-      map((message: IMessage) => {
+    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/player-left";
+    return this.websocketService.watch(destination)
+      .pipe(map((message: IMessage) => {
         const leftPlayer: Player = JSON.parse(message.body);
         return leftPlayer;
       })
-    );
+      );
   }
 
   sendBoardUpdates(gameId: string, boardUpdate: BoardUpdate): void {
-    const destination = `/game/${gameId}`;
-    this.websockerService.publish(
+    const destination = `/game/${gameId}/update-board`;
+    this.websocketService.publish(
       {
         destination: destination,
         body: JSON.stringify(boardUpdate)
@@ -75,8 +75,8 @@ export class GameplayService {
   }
 
   watchGameChatMessage(gameId: string): Observable<GameChatMessage> {
-    const destination = `/game-updates/${gameId}/chat`;
-    return this.websockerService.watch(destination).pipe(
+    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/chat-message";
+    return this.websocketService.watch(destination).pipe(
       map((message: IMessage) => {
         const gameChatMessage: GameChatMessage = JSON.parse(message.body);
         return gameChatMessage;
@@ -85,8 +85,8 @@ export class GameplayService {
   }
 
   sendGameChatMessage(gameId: string, gameChatMessage: GameChatMessage): void {
-    const destination = `/game/${gameId}/chat`;
-    this.websockerService.publish(
+    const destination = `/game/${gameId}/chat-message`;
+    this.websocketService.publish(
       {
         destination: destination,
         body: JSON.stringify(gameChatMessage)
@@ -109,12 +109,12 @@ export class GameplayService {
       console.error(errorMessage, error.error);
     }
     else if (error.status === 500) {
-      errorMessage = "Internal Server Error: " + error.error;
+      errorMessage = "Internal Server Error: " + error.message;
       console.error(errorMessage);
     }
     else {
       errorMessage = error.error;
-      console.error("Backend returned code " + error.status + ", error message: " + error.error);
+      console.error("Backend returned code " + error.status + ", error message: " + error.message);
       console.log(error);
     }
 
