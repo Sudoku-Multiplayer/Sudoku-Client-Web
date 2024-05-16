@@ -17,16 +17,6 @@ export class GameplayService {
   serverConfig: ServerConfig = inject(ServerConfig);
   websocketService: WebSocketService = inject(WebSocketService);
 
-  watchBoardUpdates(gameId: string): Observable<BoardUpdate> {
-    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/board-update";
-    return this.websocketService.watch(destination)
-      .pipe(map((message: IMessage) => {
-        const boardUpdate: BoardUpdate = JSON.parse(message.body);
-        return boardUpdate;
-      })
-      );
-  }
-
   watchPlayerJoined(gameId: string): Observable<Player> {
     const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/player-joined";
     return this.websocketService.watch(destination)
@@ -47,6 +37,25 @@ export class GameplayService {
       );
   }
 
+  fetchJoinedPlayers(gameId: string): Observable<Player[]> {
+    const url = this.serverConfig.GAME_SERVER_URL + "/game/joined-players";
+    const params = new HttpParams()
+      .set('gameId', gameId);
+
+    return this.httpClient.get<Player[]>(url, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  watchBoardUpdates(gameId: string): Observable<BoardUpdate> {
+    const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/board-update";
+    return this.websocketService.watch(destination)
+      .pipe(map((message: IMessage) => {
+        const boardUpdate: BoardUpdate = JSON.parse(message.body);
+        return boardUpdate;
+      })
+      );
+  }
+
   sendBoardUpdates(gameId: string, boardUpdate: BoardUpdate): void {
     const destination = `/game/${gameId}/update-board`;
     this.websocketService.publish(
@@ -62,15 +71,6 @@ export class GameplayService {
       .set('gameId', gameId);
 
     return this.httpClient.get<BoardUpdate[]>(url, { params })
-      .pipe(catchError(this.handleError));
-  }
-
-  fetchJoinedPlayers(gameId: string): Observable<Player[]> {
-    const url = this.serverConfig.GAME_SERVER_URL + "/game/joined-players";
-    const params = new HttpParams()
-      .set('gameId', gameId);
-
-    return this.httpClient.get<Player[]>(url, { params })
       .pipe(catchError(this.handleError));
   }
 
