@@ -17,6 +17,46 @@ export class GameplayService {
   serverConfig: ServerConfig = inject(ServerConfig);
   websocketService: WebSocketService = inject(WebSocketService);
 
+  startGame(gameId: string): Observable<void> {
+    const url: string = this.serverConfig.GAME_SERVER_URL + "/start-game";
+
+    const params = new HttpParams()
+      .set('gameId', gameId);
+
+    return this.httpClient.patch<void>(url, null, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  stopGame(gameId: string): Observable<void> {
+    const url: string = this.serverConfig.GAME_SERVER_URL + "/stop-game";
+
+    const params = new HttpParams()
+      .set('gameId', gameId);
+
+    return this.httpClient.patch<void>(url, null, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  pauseGame(gameId: string): Observable<void> {
+    const url: string = this.serverConfig.GAME_SERVER_URL + "/pause-game";
+
+    const params = new HttpParams()
+      .set('gameId', gameId);
+
+    return this.httpClient.patch<void>(url, null, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  resumeGame(gameId: string): Observable<void> {
+    const url: string = this.serverConfig.GAME_SERVER_URL + "/resume-game";
+
+    const params = new HttpParams()
+      .set('gameId', gameId);
+
+    return this.httpClient.patch<void>(url, null, { params })
+      .pipe(catchError(this.handleError));
+  }
+
   watchPlayerJoined(gameId: string): Observable<Player> {
     const destination = this.serverConfig.GAMESESSION_BROKER_PATH + "/" + gameId + "/player-joined";
     return this.websocketService.watch(destination)
