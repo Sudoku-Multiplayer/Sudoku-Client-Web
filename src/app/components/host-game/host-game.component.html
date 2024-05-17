@@ -1,13 +1,5 @@
 <div id="container">
     <form [formGroup]="hostGameForm" id="host-game-form" (ngSubmit)="submit()">
-        <mat-form-field class="form-field">
-            <mat-label class="label">Player Name:</mat-label>
-            <input matInput formControlName="playerName">
-            <small class="form-error" *ngIf="hostGameForm.controls['playerName'].errors?.['required'] && 
-                hostGameForm.controls['playerName'].touched">
-                Player Name is required.
-            </small>
-        </mat-form-field>
 
         <mat-form-field class="form-field">
             <mat-label class="label">Game Name:</mat-label>
@@ -54,6 +46,21 @@
             </small>
             <small class="form-error" *ngIf="hostGameForm.controls['playerLimit'].errors?.['max']">
                 Max value is {{ hostGameForm.controls['playerLimit'].errors?.['max'].max }}.
+            </small>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+            <mat-label class="label">Time Limit (minutes):</mat-label>
+            <input matInput type="number" placeholder="Ex 4" formControlName="timeLimit">
+            <small class="form-error" *ngIf="hostGameForm.controls['timeLimit'].errors?.['required'] && 
+                hostGameForm.controls['timeLimit'].touched">
+                Board Size is required.
+            </small>
+            <small class="form-error" *ngIf="hostGameForm.controls['timeLimit'].errors?.['min']">
+                Min value is {{ hostGameForm.controls['timeLimit'].errors?.['min'].min }}.
+            </small>
+            <small class="form-error" *ngIf="hostGameForm.controls['timeLimit'].errors?.['max']">
+                Max value is {{ hostGameForm.controls['timeLimit'].errors?.['max'].max }}.
             </small>
         </mat-form-field>
 
