@@ -5,19 +5,33 @@
     background-color: #a09d7a;
 }
 
-#online-player-count-container{
+#online-player-count-container {
     position: absolute;
     margin: 0.2em;
     font-weight: bold;
+    background-color: red;
 }
 
-#active-game-container {
+#game-list-contatiner {
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1;
     height: 100%;
     margin-left: 1%;
+}
+
+#game-list-contatiner-header {
+    display: flex;
+    width: 80%;
+}
+
+#refresh-game-list-button {
+    bottom: -1.2em;
+}
+
+#refresh-game-list-icon {
+    transform: scale(1.5);
 }
 
 #game-card-container {
@@ -49,15 +63,15 @@
     background-color: rgb(101, 126, 0);
 }
 
-mat-card-content > p{
+mat-card-content>p {
     margin: 0.3em;
 }
 
-mat-card-subtitle{
+mat-card-subtitle {
     color: black;
 }
 
-.value{
+.value {
     color: white;
 }
 
