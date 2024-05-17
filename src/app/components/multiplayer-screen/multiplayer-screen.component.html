@@ -1,11 +1,19 @@
 <div id="container">
+    <header>
+        <div id="online-player-count-container">
+            Online Players: {{onlinePlayerCount}}
+        </div>
+    </header>
 
-    <div id="online-player-count-container">
-        Online Players: {{onlinePlayerCount}}
-    </div>
 
-    <div id="active-game-container">
-        <h2>Join Game:</h2>
+    <div id="game-list-contatiner">
+        <div id="game-list-contatiner-header">
+            <h2>Join Game:</h2>
+            <button id="refresh-game-list-button" mat-button (click)="fetchGames()">
+                <mat-icon id="refresh-game-list-icon">refresh</mat-icon>
+            </button>
+        </div>
+
         @if(activeGameList == null || activeGameList.length === 0){
         <p>No active games.</p>
         }
