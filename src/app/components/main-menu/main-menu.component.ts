@@ -4,7 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
 import { MultiplayerScreenComponent } from '../multiplayer-screen/multiplayer-screen.component';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-main-menu',
@@ -15,7 +14,11 @@ import { AuthService } from '../../services/auth.service';
 })
 export class MainMenuComponent {
 
-  constructor(private router: Router) { }
+  private router: Router = inject(Router);
+
+  constructor() {
+
+  }
 
   singlePlayerGame() {
     this.router.navigate(['options']);
