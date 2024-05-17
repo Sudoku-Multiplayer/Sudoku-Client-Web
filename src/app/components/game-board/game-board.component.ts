@@ -15,7 +15,7 @@ import { BoardUpdate } from '../../models/board-update.model';
   templateUrl: './game-board.component.html',
   styleUrl: './game-board.component.css'
 })
-export class GameBoardComponent implements OnInit, OnDestroy {
+export class GameBoardComponent implements OnInit {
 
   @Input() initialBoard: number[][] = [];
   @Input() currentBoard: number[][] = [];
@@ -33,10 +33,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.boardSize = this.currentBoard.length;
-  }
-
-  ngOnDestroy(): void {
-    this.gameStateService.removeGameOptions();
   }
 
   tileKeyDown(event: KeyboardEvent, i: number, j: number) {
