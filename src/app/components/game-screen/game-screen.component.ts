@@ -31,6 +31,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../ui/confirmation-dialog/confirmation-dialog.component';
 import { WebSocketService } from '../../services/web-socket.service';
+import { GameSession } from '../../models/game-session.model';
+import { GameSessionStatus } from '../../enums/game-session-status';
+import { JoinStatus } from '../../enums/join-status';
 
 @Component({
   selector: 'app-game-screen',
@@ -67,17 +70,19 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   gameSessionStatusUpdateSubscription!: Subscription;
   gameSessionMessageUpdateSubscription!: Subscription;
 
+
   gameType!: GameType;
   createGameResponse!: CreateGameResponse;
   joinOrHost!: JoinOrHost;
   game!: SudokuGame;
+  gameSession!: GameSession;
 
   boardUpdates: BoardUpdate[] = [];
   gameChat: GameChatMessage[] = [];
   boardUpdate!: BoardUpdate;
   timeRemainingMin: number = 0;
   timeRemainingSec: number = 0;
-  gameStatusType: typeof GameStatus = GameStatus;
+  gameSessionStatusType: typeof GameSessionStatus = GameSessionStatus;
   gameScreenMessage: string = "";
 
   isLoading!: boolean;
@@ -113,20 +118,21 @@ export class GameScreenComponent implements OnInit, OnDestroy {
       this.gameService.joinGame(this.gameStateService.getJoinGameId()!, this.gameStateService.getCurrentPlayer()!)
         .subscribe({
           next: (joinGameResponse: JoinGameResponse) => {
+            const gameJoinStatus = JoinStatus[joinGameResponse.joinStatus as unknown as keyof typeof JoinStatus];
 
-            const gameJoinStatus = GameStatus[joinGameResponse.gameStatus as unknown as keyof typeof GameStatus];
-            if (gameJoinStatus === GameStatus.PLAYER_ADDED || gameJoinStatus === GameStatus.PLAYER_ALREADY_JOINED) {
-              this.game = joinGameResponse.game;
+            if (gameJoinStatus === JoinStatus.PLAYER_ADDED || gameJoinStatus === JoinStatus.PLAYER_ALREADY_JOINED) {
+              this.gameSession = joinGameResponse.gameSession;
+              this.game = this.gameSession.game;
               this.timeRemainingMin = Math.floor(this.game.remainingTime / 60);
               this.timeRemainingSec = this.game.remainingTime % 60;
               this.isLoading = false;
 
-              const gameStatus = GameStatus[this.game.status as unknown as keyof typeof GameStatus];
-              this.setGameScreenMessage(gameStatus);
+              const gameSessionStatus = GameSessionStatus[this.gameSession.gameSessionStatus as unknown as keyof typeof GameSessionStatus];
+              this.setGameScreenMessage(gameSessionStatus);
 
               this.startMultiplayerGame();
             }
-            else if (gameJoinStatus === GameStatus.FULL) {
+            else if (gameJoinStatus === JoinStatus.GAME_FULL) {
               this.gameStateService.removeCurrentGameSession();
               this.location.back();
               this.uiUtilService.showSnackBar("Game is Full, cannot join", "Ok", 10);
@@ -195,9 +201,9 @@ export class GameScreenComponent implements OnInit, OnDestroy {
 
     this.gameSessionStatusUpdateSubscription = this.gameplayService
       .watchGameSessionStatusUpdate(this.game.gameId)
-      .subscribe((updatedGameStatus: GameStatus) => {
-        this.game.status = GameStatus[updatedGameStatus as unknown as keyof typeof GameStatus];
-        this.setGameScreenMessage(updatedGameStatus);
+      .subscribe((updatedGameSessionStatus: GameSessionStatus) => {
+        this.gameSession.gameSessionStatus = GameSessionStatus[updatedGameSessionStatus as unknown as keyof typeof GameSessionStatus];
+        this.setGameScreenMessage(updatedGameSessionStatus);
       });
 
     this.gameSessionMessageUpdateSubscription = this.gameplayService
@@ -258,7 +264,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   }
 
   private updateBoard(value: number, row: number, column: number) {
-    this.game.currentBoard[row][column] = value;
+    this.gameSession.gameBoard[row][column] = value;
   }
 
   private syncGameChat() {
@@ -438,24 +444,24 @@ export class GameScreenComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  isGameStatus(gameStatus: GameStatus): boolean {
-    const current = GameStatus[this.game.status as unknown as keyof typeof GameStatus];
+  isGameSessionStatus(gameSessionStatus: GameSessionStatus): boolean {
+    const current = GameSessionStatus[this.gameSession.gameSessionStatus as unknown as keyof typeof GameSessionStatus];
 
-    if (current === gameStatus) {
+    if (current === gameSessionStatus) {
       return true;
     }
 
     return false;
   }
 
-  private setGameScreenMessage(gameStatus: GameStatus) {
-    if (gameStatus === GameStatus.NEW) {
-      this.gameScreenMessage = "Game has not started yet."
+  private setGameScreenMessage(gameSessionStatus: GameSessionStatus) {
+    if (gameSessionStatus === GameSessionStatus.NEW) {
+      this.gameScreenMessage = "Game has not started yet.<br> Waiting for host to start the game."
     }
-    else if (gameStatus === GameStatus.PAUSED) {
+    else if (gameSessionStatus === GameSessionStatus.PAUSED) {
       this.gameScreenMessage = "Game Paused."
     }
-    else if (gameStatus === GameStatus.FINISHED) {
+    else if (gameSessionStatus === GameSessionStatus.FINISHED) {
       this.gameScreenMessage = "Game Over!"
     }
   }
