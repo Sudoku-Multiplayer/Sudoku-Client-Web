@@ -1,21 +1,16 @@
-<div id="container">
+<mat-grid-list [cols]="boardSize" rowHeight="1:1" gutterSize="0.03em">
 
-  <div id="board-container">
-    <mat-grid-list [cols]="boardSize" rowHeight="1:1" gutterSize="2px">
+  @for (row of currentBoard; let i = $index; track i) {
+  @for (num of row; let j = $index; track j) {
+  <mat-grid-tile>
+    <input type="number" inputmode="numeric" class="tile" 
+      [ngClass]="{'initialTile': initialBoard[i][j] !== 0}"
+      [value]="currentBoard[i][j] === 0 ? '' : currentBoard[i][j]" 
+      [disabled]="initialBoard[i][j] !== 0"
+      (keydown)="tileKeyDown($event, i, j)"
+    >
 
-      @for (row of currentBoard; let i = $index; track i) {
-      @for (num of row; let j = $index; track j) {
-      <mat-grid-tile>
-        <input type="number" inputmode="numeric" class="tile" 
-          [ngClass]="{'initialTile': initialBoard[i][j] !== 0}"
-          [value]="currentBoard[i][j] === 0 ? '' : currentBoard[i][j]" 
-          [disabled]="initialBoard[i][j] !== 0"
-          (keydown)="tileKeyDown($event, i, j)">
-
-      </mat-grid-tile>
-      }
-      }
-    </mat-grid-list>
-  </div>
-
-</div>
+  </mat-grid-tile>
+  }
+  }
+</mat-grid-list>
