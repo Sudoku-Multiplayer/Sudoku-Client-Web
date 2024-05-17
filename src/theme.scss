@@ -1,0 +1,109 @@
+@use '@angular/material' as mat;
+
+$sudoku-primary-palette: (
+    50: #FFF8E1,
+    100: #FFECB3,
+    200: #FFE082,
+    300: #FFD54F,
+    400: #FFCA28,
+    500: #FFC107,
+    600: #FFB300,
+    700: #FFA000,
+    800: #FF8F00,
+    900: #FF6F00,
+    contrast: (50: rgba(black, 0.87),
+        100: rgba(black, 0.87),
+        200: rgba(black, 0.87),
+        300: white,
+    )
+);
+
+$sudoku-accent-palette: (
+    50: #F9FBE7,
+    100: #F0F4C3,
+    200: #E6EE9C,
+    300: #DCE775,
+    400: #D4E157,
+    500: #CDDC39,
+    600: #C0CA33,
+    700: #AFB42B,
+    800: #9E9D24,
+    900: #827717,
+    contrast: (50: rgba(black, 0.87),
+        100: rgba(black, 0.87),
+        200: rgba(black, 0.87),
+        300: white,
+    )
+);
+
+$sudoku-primary-palette-old: (
+    50: #fefce6,
+    100: #fdf7c2,
+    200: #fbf19a,
+    300: #f9eb72,
+    400: #f8e854,
+    500: #f6e334,
+    600: #f5d130,
+    700: #f3ba28,
+    800: #f1a220,
+    900: #ec7910,
+    contrast: (50: rgba(black, 0.87),
+        100: rgba(black, 0.87),
+        200: rgba(black, 0.87),
+        300: white,
+        400: yellow,
+        500: black,
+    )
+);
+
+
+$sudoku-accent-palette-2: (
+    50: #f7fae7,
+    100: #eaf2c2,
+    200: #dcea9b,
+    300: #cfe273,
+    400: #c5db56,
+    500: #bcd538,
+    600: #b0c432,
+    700: #a0ae2a,
+    800: #909722,
+    900: #757115,
+    contrast: (50: rgba(black, 0.87),
+        100: rgba(black, 0.87),
+        200: rgba(black, 0.87),
+        300: white,
+        400: yellow,
+        500: black,
+    )
+);
+
+// Define a dark theme
+$dark-theme: mat.define-dark-theme((color: (
+                primary: mat.define-palette($sudoku-primary-palette),
+                accent: mat.define-palette($sudoku-accent-palette),
+            ),
+            // Only include `typography` and `density` in the default dark theme.
+            typography: mat.define-typography-config(),
+            density: 0,
+        ));
+
+// Define a light theme
+$light-theme: mat.define-light-theme((color: (primary: mat.define-palette(mat.$indigo-palette),
+                accent: mat.define-palette(mat.$pink-palette),
+            ),
+        ));
+
+@include mat.core();
+
+// Apply the dark theme by default
+@include mat.core-theme($dark-theme);
+@include mat.button-theme($dark-theme);
+@include mat.all-component-themes($dark-theme);
+
+// Apply the light theme only when the user prefers light themes.
+@media (prefers-color-scheme: light) {
+    // Use the `-color` mixins to only apply color styles without reapplying the same
+    // typography and density styles.
+    @include mat.core-color($light-theme);
+    @include mat.button-color($light-theme);
+}
