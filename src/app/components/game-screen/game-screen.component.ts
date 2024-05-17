@@ -34,6 +34,8 @@ import { WebSocketService } from '../../services/web-socket.service';
 import { GameSession } from '../../models/game-session.model';
 import { GameSessionStatus } from '../../enums/game-session-status';
 import { JoinStatus } from '../../enums/join-status';
+import { VoteStatus } from '../../enums/vote-status';
+import { VoteRecord } from '../../models/vote-record.model';
 
 @Component({
   selector: 'app-game-screen',
@@ -69,7 +71,8 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   timeUpdateSubscription!: Subscription;
   gameSessionStatusUpdateSubscription!: Subscription;
   gameSessionMessageUpdateSubscription!: Subscription;
-
+  gameSubmissionVoteInitiatedSubscription!: Subscription;
+  gameSubmissionVoteCastedSubscription!: Subscription;
 
   gameType!: GameType;
   createGameResponse!: CreateGameResponse;
@@ -258,6 +261,27 @@ export class GameScreenComponent implements OnInit, OnDestroy {
         this.timeRemainingSec = updatedTime % 60;
       });
 
+
+    this.gameSubmissionVoteInitiatedSubscription = this.gameplayService
+      .watchGameSubmissionVoteInitiated(this.game.gameId)
+      .subscribe((voteInitiator: Player) => {
+        if (voteInitiator) {
+          this.openCastVoteDialog(voteInitiator);
+        }
+      });
+
+    this.gameSubmissionVoteCastedSubscription = this.gameplayService
+      .watchGameSubmissionVoteCasted(this.game.gameId)
+      .subscribe((voteRecord: VoteRecord) => {
+        const voteStatus: VoteStatus = VoteStatus[voteRecord.voteStatus as unknown as keyof typeof VoteStatus];
+        if (voteStatus === VoteStatus.ACCEPTED) {
+
+        }
+        else if (voteStatus === VoteStatus.REJECTED) {
+
+        }
+      });
+
     this.syncGameChat();
     this.syncBoardUpdates();
     this.syncJoinedPlayers();
@@ -265,6 +289,29 @@ export class GameScreenComponent implements OnInit, OnDestroy {
 
   private updateBoard(value: number, row: number, column: number) {
     this.gameSession.gameBoard[row][column] = value;
+  }
+
+  openCastVoteDialog(voteInitiator: Player): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: "Vote Submit game?",
+        content: "This will end the game, lock the board, and show the final result." +
+          "<br>-vote initiated by: " + voteInitiator.name
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      let voteStatus: VoteStatus;
+      if (result) {
+        voteStatus = VoteStatus.ACCEPTED;
+      }
+      else {
+        voteStatus = VoteStatus.REJECTED;
+      }
+
+      const voteRecord: VoteRecord = new VoteRecord(this.currentPlayer, voteStatus);
+      this.gameplayService.sendGameSubmitVote(this.game.gameId, voteRecord);
+    });
   }
 
   private syncGameChat() {
@@ -400,6 +447,19 @@ export class GameScreenComponent implements OnInit, OnDestroy {
       });
   }
 
+  submitGame() {
+    this.gameplayService.initiateGameSubmitVoting(this.game.gameId, this.currentPlayer)
+      .subscribe({
+        next: (voteInitiated: boolean) => {
+
+        },
+        error: (err) => {
+          this.uiUtilService.showSnackBar(err, "Ok", 8);
+        }
+      });
+  }
+
+
   leaveGame() {
     this.gameStateService.removeCurrentGameSession();
 
@@ -415,6 +475,8 @@ export class GameScreenComponent implements OnInit, OnDestroy {
             this.timeUpdateSubscription.unsubscribe();
             this.gameSessionStatusUpdateSubscription.unsubscribe();
             this.gameSessionMessageUpdateSubscription.unsubscribe();
+            this.gameSubmissionVoteInitiatedSubscription.unsubscribe();
+            this.gameSubmissionVoteCastedSubscription.unsubscribe();
           },
           error: (err) => {
             this.uiUtilService.showSnackBar(err, "Ok", 8);
