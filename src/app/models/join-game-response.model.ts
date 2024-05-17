@@ -1,9 +1,13 @@
-import { GameStatus } from "../enums/game-status";
-import { SudokuGame } from "./sudoku-game.model";
+import { JoinStatus } from "../enums/join-status";
+import { GameSession } from "./game-session.model";
 
 export class JoinGameResponse {
 
-    constructor(public gameStatus: GameStatus, public statusMessage: string, public game: SudokuGame) {
+    constructor(
+        public joinStatus: JoinStatus,
+        public statusMessage: string,
+        public gameSession: GameSession
+    ) {
 
     }
 }
