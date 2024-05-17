@@ -454,6 +454,14 @@ export class GameScreenComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  isMultiplayerGame(): boolean {
+    if (this.gameType === GameType.MULTI) {
+      return true;
+    }
+
+    return false;
+  }
+
   private setGameScreenMessage(gameSessionStatus: GameSessionStatus) {
     if (gameSessionStatus === GameSessionStatus.NEW) {
       this.gameScreenMessage = "Game has not started yet.<br> Waiting for host to start the game."
