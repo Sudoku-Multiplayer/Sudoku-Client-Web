@@ -1,4 +1,4 @@
 export enum PlayerType {
-    REGULAR,
-    GUEST
+    REGULAR = "REGULAR",
+    GUEST = "GUEST"
 }
