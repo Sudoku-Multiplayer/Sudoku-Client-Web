@@ -3,7 +3,6 @@ import { MatCardModule } from '@angular/material/card';
 import { SudokuGame } from '../../models/sudoku-game.model';
 import { GameService } from '../../services/game.service';
 import { UiUtilService } from '../../services/ui-util.service';
-import { GameStatus } from '../../enums/game-status';
 import { MatButtonModule } from '@angular/material/button';
 import { HostGameComponent } from '../host-game/host-game.component';
 import { GameStateService } from '../../services/game-state.service';
@@ -12,11 +11,13 @@ import { GameplayService } from '../../services/gameplay.service';
 import { AuthService } from '../../services/auth.service';
 import { Level } from '../../enums/level';
 import { GameType } from '../../enums/game-type';
+import { MatIconModule } from '@angular/material/icon';
+import { GameSessionStatus } from '../../enums/game-session-status';
 
 @Component({
   selector: 'app-multiplayer-screen',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, HostGameComponent],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, HostGameComponent],
   templateUrl: './multiplayer-screen.component.html',
   styleUrl: './multiplayer-screen.component.css'
 })
@@ -42,8 +43,8 @@ export class MultiplayerScreenComponent implements OnInit {
         next: (gameList: SudokuGame[]) => {
           let gameArr: SudokuGame[] = [];
           for (let game of gameList) {
-            const gameStatus = GameStatus[game.status as unknown as keyof typeof GameStatus];
-            if (gameStatus === GameStatus.NEW || gameStatus === GameStatus.RUNNING) {
+            const gameSessionStatus = GameSessionStatus[game.status as unknown as keyof typeof GameSessionStatus];
+            if (gameSessionStatus !== GameSessionStatus.FINISHED) {
               gameArr.push(game);
             }
           }
