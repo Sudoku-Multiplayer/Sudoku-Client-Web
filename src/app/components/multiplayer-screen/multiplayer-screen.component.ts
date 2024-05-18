@@ -33,7 +33,7 @@ export class MultiplayerScreenComponent implements OnInit {
   onlinePlayerCount: number = 0;
 
   ngOnInit(): void {
-    this.fetchActiveGames();
+    this.fetchGames();
 
     setTimeout(() => {
       this.fetchOnlinePlayerCount();
@@ -41,7 +41,7 @@ export class MultiplayerScreenComponent implements OnInit {
 
   }
 
-  fetchActiveGames() {
+  fetchGames() {
     this.gameService.fetchActiveGames()
       .subscribe({
         next: (gameList: SudokuGame[]) => {
