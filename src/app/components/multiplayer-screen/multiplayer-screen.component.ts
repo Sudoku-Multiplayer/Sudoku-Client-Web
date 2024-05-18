@@ -34,7 +34,11 @@ export class MultiplayerScreenComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchActiveGames();
-    this.fetchOnlinePlayerCount();
+
+    setTimeout(() => {
+      this.fetchOnlinePlayerCount();
+    }, 1000);
+
   }
 
   fetchActiveGames() {
