@@ -87,6 +87,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   timeRemainingSec: number = 0;
   gameSessionStatusType: typeof GameSessionStatus = GameSessionStatus;
   gameScreenMessage: string = "";
+  showSolution: boolean = false;
 
   isLoading!: boolean;
   currentPlayer: Player;
@@ -132,7 +133,9 @@ export class GameScreenComponent implements OnInit, OnDestroy {
 
               const gameSessionStatus = GameSessionStatus[this.gameSession.gameSessionStatus as unknown as keyof typeof GameSessionStatus];
               this.setGameScreenMessage(gameSessionStatus);
-
+              if(gameSessionStatus === GameSessionStatus.FINISHED){
+                this.showSolution = true;
+              }
               this.startMultiplayerGame();
             }
             else if (gameJoinStatus === JoinStatus.GAME_FULL) {
@@ -207,6 +210,9 @@ export class GameScreenComponent implements OnInit, OnDestroy {
       .subscribe((updatedGameSessionStatus: GameSessionStatus) => {
         this.gameSession.gameSessionStatus = GameSessionStatus[updatedGameSessionStatus as unknown as keyof typeof GameSessionStatus];
         this.setGameScreenMessage(updatedGameSessionStatus);
+        if (updatedGameSessionStatus === GameSessionStatus.FINISHED) {
+          this.showSolution = true;
+        }
       });
 
     this.gameSessionMessageUpdateSubscription = this.gameplayService
