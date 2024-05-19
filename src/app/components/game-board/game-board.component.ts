@@ -20,6 +20,7 @@ export class GameBoardComponent implements OnInit {
   @Input() initialBoard: number[][] = [];
   @Input() currentBoard: number[][] = [];
   @Input() solution: number[][] = [];
+  @Input() showSolution: boolean = false;
   @Output() boardUpdateEvent: EventEmitter<BoardUpdate> = new EventEmitter<BoardUpdate>();
 
   gameService: GameService = inject(GameService);
