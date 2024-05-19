@@ -126,8 +126,8 @@ export class GameScreenComponent implements OnInit, OnDestroy {
             if (gameJoinStatus === JoinStatus.PLAYER_ADDED || gameJoinStatus === JoinStatus.PLAYER_ALREADY_JOINED) {
               this.gameSession = joinGameResponse.gameSession;
               this.game = this.gameSession.game;
-              this.timeRemainingMin = Math.floor(this.game.remainingTime / 60);
-              this.timeRemainingSec = this.game.remainingTime % 60;
+              this.timeRemainingMin = Math.floor(this.gameSession.remainingTime / 60);
+              this.timeRemainingSec = this.gameSession.remainingTime % 60;
               this.isLoading = false;
 
               const gameSessionStatus = GameSessionStatus[this.gameSession.gameSessionStatus as unknown as keyof typeof GameSessionStatus];
@@ -170,7 +170,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
                 gameOptions.level as Level,
                 1,
                 1,
-                GameStatus.RUNNING,
+                GameSessionStatus.RUNNING,
                 "Single-Player-Game",
                 gameOptions.playerName + "'s Game",
                 initialBoard,
@@ -220,8 +220,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
       .subscribe((joinedPlayer: Player) => {
         if (this.currentPlayer.id !== joinedPlayer.id ||
           this.currentPlayer.playerType !== joinedPlayer.playerType) {
-          this.game.players.push(joinedPlayer);
-          this.game.playerCount = this.game.players.length;
+          this.gameSession.players.push(joinedPlayer);
           this.uiUtilService.showSnackBar(joinedPlayer.name + " joined the game.", "", 4);
         }
       });
@@ -234,15 +233,12 @@ export class GameScreenComponent implements OnInit, OnDestroy {
           this.currentPlayer.playerType !== leftPlayer.playerType) {
 
           const tempPlayers: Player[] = [];
-          this.game.players.forEach(player => {
+          this.gameSession.players.forEach(player => {
             if (player.id != leftPlayer.id || player.playerType != leftPlayer.playerType) {
               tempPlayers.push(player);
             }
           });
-
-          this.game.players = tempPlayers;
-          this.game.playerCount = this.game.players.length;
-
+          this.gameSession.players = tempPlayers;
           this.uiUtilService.showSnackBar(leftPlayer.name + " left the game.", "", 4);
         }
       });
