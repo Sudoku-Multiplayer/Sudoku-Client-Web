@@ -7,6 +7,18 @@
   background-color: rgb(236, 255, 253);
 }
 
+.blankSolutionTile{
+  background-color: white;
+}
+
+.correctSolutionTile{
+  background-color: rgb(29, 236, 29);
+}
+
+.incorrectSolutionTile{
+  background-color: red;
+}
+
 .initialTile {
   background-color: rgb(255, 252, 223);
 }
