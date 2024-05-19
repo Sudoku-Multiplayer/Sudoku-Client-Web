@@ -98,6 +98,7 @@
                     @else{
                     <app-game-board id="game-board" [initialBoard]="game.initialBoard"
                         [currentBoard]="gameSession.gameBoard" [solution]="game.solution"
+                        [showSolution]="showSolution"
                         (boardUpdateEvent)="onBoardUpdateFromChild($event)">
                     </app-game-board>
                     }
