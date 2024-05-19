@@ -87,6 +87,11 @@
                 </div>
 
                 <div id="game-screen-container">
+                    @if (showSolution) {
+                        <div id="solution-title">
+                            Solution
+                        </div>
+                    }
                     @if(isGameSessionStatus(gameSessionStatusType.NEW) ||
                     isGameSessionStatus(gameSessionStatusType.PAUSED)){
                     <div id="game-screen-message-container">
