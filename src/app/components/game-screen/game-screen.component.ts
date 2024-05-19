@@ -25,7 +25,6 @@ import { Player } from '../../models/player.model';
 import { ServerConfig } from '../../configs/server.config';
 import { AuthService } from '../../services/auth.service';
 import { GameBoard } from '../../models/game-board.model';
-import { GameStatus } from '../../enums/game-status';
 import { Level } from '../../enums/level';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
