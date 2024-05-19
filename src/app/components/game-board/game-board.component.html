@@ -1,16 +1,35 @@
-<mat-grid-list [cols]="boardSize" rowHeight="1:1" gutterSize="0.03em">
-
-  @for (row of currentBoard; let i = $index; track i) {
-  @for (num of row; let j = $index; track j) {
-  <mat-grid-tile>
-    <input type="number" inputmode="numeric" class="tile" 
-      [ngClass]="{'initialTile': initialBoard[i][j] !== 0}"
-      [value]="currentBoard[i][j] === 0 ? '' : currentBoard[i][j]" 
-      [disabled]="initialBoard[i][j] !== 0"
-      (keydown)="tileKeyDown($event, i, j)"
-    >
-
-  </mat-grid-tile>
-  }
-  }
-</mat-grid-list>
+@if (showSolution) {
+    <mat-grid-list [cols]="boardSize" rowHeight="1:1" gutterSize="0.03em">
+      @for (row of solution; let i = $index; track i) {
+        @for (num of row; let j = $index; track j) {
+          <mat-grid-tile>
+            <input type="number" inputmode="numeric" class="tile blankSolutionTile" 
+              [ngClass]="{
+                'correctSolutionTile': currentBoard[i][j] === solution[i][j] && currentBoard[i][j] !== 0, 
+                'incorrectSolutionTile': currentBoard[i][j] !== solution[i][j] && currentBoard[i][j] !== 0,
+                'initialTile': initialBoard[i][j] !== 0
+              }"
+              [value]="solution[i][j]" 
+              [disabled]="initialBoard[i][j] !== 0"
+            >
+          </mat-grid-tile>
+        }
+      }
+  </mat-grid-list>
+}
+@else{
+  <mat-grid-list [cols]="boardSize" rowHeight="1:1" gutterSize="0.03em">
+      @for (row of currentBoard; let i = $index; track i) {
+        @for (num of row; let j = $index; track j) {
+          <mat-grid-tile>
+            <input type="number" inputmode="numeric" class="tile" 
+              [ngClass]="{'initialTile': initialBoard[i][j] !== 0}"
+              [value]="currentBoard[i][j] === 0 ? '' : currentBoard[i][j]" 
+              [disabled]="initialBoard[i][j] !== 0"
+              (keydown)="tileKeyDown($event, i, j)"
+            >
+          </mat-grid-tile>
+        }
+      }
+  </mat-grid-list>
+}
