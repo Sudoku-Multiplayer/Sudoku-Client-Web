@@ -41,10 +41,10 @@
 
                 <div id="game-info-body">
                     <div id="joined-player-count">
-                        Joined Players: {{game.playerCount}}
+                        Joined Players: {{gameSession.players.length}}
                     </div>
                     <div id="players-contatiner">
-                        @for (player of game.players; track $index) {
+                        @for (player of gameSession.players; track $index) {
                         <div class="player-info-box"
                             [ngClass]="{'current-player': isCurrentPlayer(player), 'host-player': isHostPlayer(player)}">
                             {{player.name}}
