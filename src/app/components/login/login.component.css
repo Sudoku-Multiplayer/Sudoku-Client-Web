@@ -8,10 +8,21 @@
     background-color: #5c5a46;
 }
 
+#app-title-container {
+    display: flex;
+}
+
+#app-title {
+    font-size: 2.5em;
+    margin-top: 0;
+    margin-bottom: 0.2em;
+    color: rgb(144, 158, 20);
+}
+
 #wrapper {
     display: flex;
     flex-direction: column;
-    padding: 1em;
+    padding: 0.2em;
     border-radius: 1em;
     border: 0.2em solid rgb(150, 149, 60);
     width: fit-content;
@@ -40,7 +51,7 @@
 
 #login-title {
     height: fit-content;
-    margin: 0 0 0.5em;
+    margin: 0;
 }
 
 #guest-login-title {
@@ -56,7 +67,7 @@
     padding: 0.3em;
 }
 
-mat-checkbox{
+mat-checkbox {
     margin-bottom: 0.5em;
 }
 
@@ -74,6 +85,10 @@ mat-divider {
     width: 0.1em;
     height: 100%;
     border: 0.2em solid rgb(150, 149, 60);
+}
+
+#no-account {
+    margin: 0.1em;
 }
 
 #signup-container {
