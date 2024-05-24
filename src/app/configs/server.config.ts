@@ -5,9 +5,9 @@ import { Injectable } from "@angular/core";
 })
 export class ServerConfig {
 
-    readonly BASE_SERVER_URL: string = "http://localhost:8080";
+    readonly BASE_SERVER_URL: string = "https://sudoku-server-0d54.onrender.com";
 
-    readonly BASE_WEBSOCKET_URL: string = "ws://localhost:8080/ws";
+    readonly BASE_WEBSOCKET_URL: string = 'wss://sudoku-server-0d54.onrender.com/ws';
 
     readonly SUDOKU_SERVER_URL: String = this.BASE_SERVER_URL + "/sudoku-server";
 
