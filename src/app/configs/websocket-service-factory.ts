@@ -1,13 +1,15 @@
 import { inject } from "@angular/core";
 import { WebSocketService } from "../services/web-socket.service";
 import { GameStateService } from "../services/game-state.service";
+import { ServerConfig } from "./server.config";
 
 export function webSocketServiceFactory() {
     const webSocketService: WebSocketService = new WebSocketService();
     const gameStateService: GameStateService = inject(GameStateService);
+    const serverConfig: ServerConfig = inject(ServerConfig);
 
     webSocketService.configure({
-        brokerURL: 'ws://localhost:8080/ws',
+        brokerURL: serverConfig.BASE_WEBSOCKET_URL,
 
         connectHeaders: {
             "player": JSON.stringify(gameStateService.getCurrentPlayer()),
