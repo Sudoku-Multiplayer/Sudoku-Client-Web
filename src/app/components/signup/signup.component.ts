@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth.service';
 import { Player } from '../../models/player.model';
 import { UiUtilService } from '../../services/ui-util.service';
 import { GameStateService } from '../../services/game-state.service';
+import { PlayerType } from '../../enums/player-type';
 
 @Component({
   selector: 'app-signup',
@@ -59,8 +60,15 @@ export class SignupComponent implements OnInit {
 
     this.authService.signup(playerData)
       .subscribe({
-        next: (player: Player) => {
-          this.gameStateService.savePlayer(player, true);
+        next: (receivedPlayerData: PlayerData) => {
+
+          const player: Player = new Player(
+            receivedPlayerData.playerName!,
+            receivedPlayerData.id!,
+            PlayerType.REGULAR
+          );
+
+          this.gameStateService.savePlayer(player, false);
           this.router.navigate(['main-menu']);
         },
         error: (err) => {
