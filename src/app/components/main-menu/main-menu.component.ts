@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
 import { MultiplayerScreenComponent } from '../multiplayer-screen/multiplayer-screen.component';
+import { UiUtilService } from '../../services/ui-util.service';
 
 @Component({
   selector: 'app-main-menu',
@@ -13,6 +14,8 @@ import { MultiplayerScreenComponent } from '../multiplayer-screen/multiplayer-sc
   styleUrl: './main-menu.component.css'
 })
 export class MainMenuComponent {
+
+  uiUtilService: UiUtilService = inject(UiUtilService);
 
   private router: Router = inject(Router);
 
@@ -30,6 +33,10 @@ export class MainMenuComponent {
 
   settings() {
     this.router.navigate(['settings']);
+  }
+
+  about() {
+    this.uiUtilService.showAboutDialog();
   }
 
 }
