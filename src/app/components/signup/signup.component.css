@@ -18,19 +18,31 @@
 }
 
 #signup-title-container {
-    font-size: 1.8em;
     text-align: center;
+}
+
+#signup-title {
+    font-size: 1.8em;
+    margin: 0.5em;
 }
 
 #signup-form {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
+}
+
+.form-field {
+    margin: -0.5em;
 }
 
 mat-divider {
     width: 100%;
     background-color: black;
+}
+
+p {
+    margin: 0.5em;
 }
 
 #login-container {
@@ -44,6 +56,6 @@ button:hover {
     background-color: #fff069;
 }
 
-.form-error{
+.form-error {
     color: red;
 }

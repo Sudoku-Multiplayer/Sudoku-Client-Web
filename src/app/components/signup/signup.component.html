@@ -3,11 +3,13 @@
     <div id="signup-container">
 
         <div id="signup-title-container">
-            <p id="signup-title">Signup</p>
+            <p id="signup-title">
+                Signup
+            </p>
         </div>
 
         <form [formGroup]="signupForm" id="signup-form" (ngSubmit)="signup()">
-            <mat-form-field>
+            <mat-form-field class="form-field">
                 <mat-label>Player Name:</mat-label>
                 <input matInput formControlName="playerName">
                 <small class="form-error" *ngIf="signupForm.controls['playerName'].errors?.['required'] && 
@@ -16,7 +18,7 @@
                 </small>
             </mat-form-field>
 
-            <mat-form-field>
+            <mat-form-field class="form-field">
                 <mat-label>Email:</mat-label>
                 <input matInput formControlName="email">
                 <small class="form-error" *ngIf="signupForm.controls['email'].errors?.['required'] && 
@@ -28,7 +30,7 @@
                 </small>
             </mat-form-field>
 
-            <mat-form-field>
+            <mat-form-field class="form-field">
                 <mat-label>Password:</mat-label>
                 <input matInput [type]="passwordHide ? 'password' : 'text'" formControlName="password">
                 <button mat-icon-button matSuffix (click)="passwordHide = !passwordHide"
@@ -44,7 +46,7 @@
                 </small>
             </mat-form-field>
 
-            <mat-form-field>
+            <mat-form-field class="form-field">
                 <mat-label>Confirm Password:</mat-label>
                 <input matInput [type]="confirmPasswordHide ? 'password' : 'text'" formControlName="confirmPassword">
                 <button mat-icon-button matSuffix (click)="confirmPasswordHide = !confirmPasswordHide"
