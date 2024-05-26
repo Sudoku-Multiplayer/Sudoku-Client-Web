@@ -35,15 +35,15 @@
 #menu-button-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
 }
 
 .menu-button {
     width: 10rem;
     white-space: nowrap;
-    margin-top: 0.8rem;
-    margin-bottom: 0.8rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .menu-button:hover {
@@ -51,7 +51,12 @@
 }
 
 #menu-title-container {
-    font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 2em;
     text-align: center;
+}
+
+#menu-title{
+    font-size: 2em;
+    padding: 0;
+    margin: 0;
 }
