@@ -1,0 +1,16 @@
+mat-dialog-actions {
+    padding: 0.5em;
+    justify-content: end;
+}
+
+#about-para {
+    text-wrap: normal;
+}
+
+p {
+    margin: 0.5em;
+}
+
+a {
+    color: rgb(222, 249, 15);
+}
