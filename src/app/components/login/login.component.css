@@ -105,6 +105,12 @@ button:hover {
     color: red;
 }
 
+#about-button{
+    position: absolute;
+    right: 4em;
+    bottom: 2.8em;
+}
+
 @media screen and (max-width: 480px) {
     #login-container {
         flex-direction: column;

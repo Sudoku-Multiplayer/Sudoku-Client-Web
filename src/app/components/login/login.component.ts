@@ -38,11 +38,10 @@ export class LoginComponent implements OnInit {
   guestForm!: FormGroup;
 
   authService: AuthService = inject(AuthService);
-  uiUTilService: UiUtilService = inject(UiUtilService);
+  uiUtilService: UiUtilService = inject(UiUtilService);
   gameStateService: GameStateService = inject(GameStateService);
   router: Router = inject(Router);
 
-  //rememberMe: boolean = false;
   hidePassword: boolean = true;
 
   constructor() {
@@ -85,7 +84,7 @@ export class LoginComponent implements OnInit {
         },
 
         error: (err) => {
-          this.uiUTilService.showSnackBar(err, "Ok", 8);
+          this.uiUtilService.showSnackBar(err, "Ok", 8);
         }
       });
 
@@ -103,9 +102,13 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['main-menu']);
         },
         error: (error) => {
-          this.uiUTilService.showSnackBar(error, "Ok", 8);
+          this.uiUtilService.showSnackBar(error, "Ok", 8);
         }
       });
+  }
+
+  about() {
+    this.uiUtilService.showAboutDialog();
   }
 
 }
