@@ -28,6 +28,7 @@ export class GameBoardComponent implements OnInit {
   utilService: UtilService = inject(UtilService);
 
   boardSize!: number;
+  hoveredCell: { i: number; j: number; } | null = null;
 
   constructor() {
   }
@@ -60,6 +61,21 @@ export class GameBoardComponent implements OnInit {
         event.preventDefault();
       }
     }
+  }
+
+  showOriginalCellValue(i: number, j: number): boolean {
+
+    if (this.hoveredCell) {
+      if (this.hoveredCell.i === i && this.hoveredCell.j === j) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  onCellHover(i: number, j: number, isHovered: boolean) {
+    this.hoveredCell = isHovered ? { i, j } : null;
   }
 
 }

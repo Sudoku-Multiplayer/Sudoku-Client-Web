@@ -9,7 +9,9 @@
                 'incorrectSolutionTile': currentBoard[i][j] !== solution[i][j] && currentBoard[i][j] !== 0,
                 'initialTile': initialBoard[i][j] !== 0
               }"
-              [value]="solution[i][j]" 
+              [value]="showOriginalCellValue(i, j) ? currentBoard[i][j] : solution[i][j]" 
+              (mouseenter)="onCellHover(i, j, true)" 
+              (mouseleave)="onCellHover(i, j, false)"
               [disabled]="true"
             >
           </mat-grid-tile>
