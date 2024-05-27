@@ -2,7 +2,7 @@
     <div id="header">Chat</div>
 
     <div id="chat-container">
-        <!--  <mat-list role="list" id="message-list"> -->
+
         <div id="message-container">
             @for (message of gameChat; track $index) {
             <div class="message-bubble" [ngClass]="{'sender': message.player.id === currentPlayer?.id && 
@@ -10,21 +10,10 @@
                 <div class="player-name">{{message.player.name}}</div>
                 <div class="message">{{message.message}}</div>
             </div>
-            <!-- <mat-list-item role="listitem" class="list-item" 
-                    [ngClass]="{'sender-list-item': message.player.id === player?.id}">-->
-            <!-- <mat-card class="chat-card" [ngClass]="{'sender': message.player.id === player?.id}">
-                <mat-card-header>
-                    <mat-card-title class="chat-card-title">{{message.player.name}}</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    {{message.message}}
-                </mat-card-content>
-            </mat-card> -->
-            <!-- </mat-list-item> -->
+
             }
             <div #endOfMessages></div>
         </div>
-        <!-- </mat-list> -->
 
     </div>
 
