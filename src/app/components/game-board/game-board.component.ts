@@ -40,7 +40,7 @@ export class GameBoardComponent implements OnInit {
   tileKeyDown(event: KeyboardEvent, i: number, j: number) {
     const currentValue = (event.target as HTMLInputElement).value;
 
-    if (!['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.code)) {
+    if (!['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.key)) {
 
       // digit from 0 to 9 pressed.
       if (!isNaN(Number(event.key))) {
