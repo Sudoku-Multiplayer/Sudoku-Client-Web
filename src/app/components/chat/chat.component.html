@@ -5,8 +5,10 @@
 
         <div id="message-container">
             @for (message of gameChat; track $index) {
-            <div class="message-bubble" [ngClass]="{'sender': message.player.id === currentPlayer?.id && 
-                message.player.playerType === currentPlayer?.playerType}">
+            <div class="message-bubble" [ngClass]="{
+                'sender': message.player.id === currentPlayer?.id && 
+                        message.player.playerType === currentPlayer?.playerType
+                }">
                 <div class="player-name">{{message.player.name}}</div>
                 <div class="message">{{message.message}}</div>
             </div>
@@ -19,6 +21,8 @@
 
     <div id="message-input-container">
         <input #message type="text" id="input" placeholder="Enter your message" (keydown.enter)="emitMessage(message)">
-        <button color="accent" id="send-button" (click)="emitMessage(message)">></button>
+        <button color="accent" id="send-button" (click)="emitMessage(message)">
+            >
+        </button>
     </div>
 </div>
