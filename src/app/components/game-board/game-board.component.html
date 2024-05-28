@@ -12,6 +12,7 @@
               [value]="showOriginalCellValue(i, j) ? currentBoard[i][j] : solution[i][j]" 
               (mouseenter)="onCellHover(i, j, true)" 
               (mouseleave)="onCellHover(i, j, false)"
+              (touchstart)="onCellHover(i, j, true)" 
               [disabled]="true"
             >
           </mat-grid-tile>
