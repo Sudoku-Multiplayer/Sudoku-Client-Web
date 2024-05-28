@@ -14,7 +14,6 @@
     flex-direction: column;
     padding: 2%;
     margin: 2%;
-    font-size: small;
     overflow: auto;
 }
 
@@ -72,52 +71,13 @@
     word-wrap: break-word;
 }
 
-/* 
-.chat-card {
-    background-color: rgb(91, 173, 255);
-    font-size: 0.8em;
-    width: fit-content;
-    margin: 0;
-    padding: 0 !important;
-    margin-bottom: 0.5em;
-}
-
-.chat-card.sender {
-    background-color: rgb(15, 142, 56);
-    align-self: flex-end;
-    width: fit-content;
-}
-
-.chat-card-title {
-    font-size: 1em;
-} */
-
-/* .list-item {
-    background-color: rgb(139, 0, 151);
-    width: fit-content;
-    margin-bottom: 0.5em;
-    padding: 0;
-}
-
-.list-item.sender-list-item {
-    background-color: rgb(139, 0, 151);
-    justify-content: flex-end;
-    align-self: flex-end;
-    align-items: flex-end;
-}
-
-.list-item.sender-list-item .mat-list-item-content {
-    justify-content: flex-end;
-    align-items: flex-end;
-    align-self: flex-end;
-} */
-
 #message-input-container {
     height: 5%;
     width: 100%;
     display: flex;
     flex-direction: row;
     margin-bottom: 0.2em;
+    position: relative;
 }
 
 #input {
@@ -130,4 +90,18 @@
     aspect-ratio: 1;
     border-radius: 50%;
     height: 100%;
+}
+
+@media screen and (max-width: 750px) {
+
+    .message-bubble {
+        max-width: 50%;
+    }
+
+    #send-button {
+        height: 90%;
+        position: absolute;
+        right: 0.2em;
+    }
+
 }
