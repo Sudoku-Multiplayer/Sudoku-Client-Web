@@ -83,8 +83,8 @@ export class HostGameComponent implements OnInit {
       gameName: new FormControl(this.getDefaultGameName(), Validators.required),
       boardSize: new FormControl('9', [Validators.required, Validators.min(4), Validators.max(9)]),
       level: new FormControl(Level.EASY),
-      playerLimit: new FormControl('5', [Validators.required, Validators.min(2), Validators.max(5)]),
-      timeLimit: new FormControl('5', [Validators.required, Validators.min(1), Validators.max(10)])
+      playerLimit: new FormControl('5', [Validators.required, Validators.min(2), Validators.max(10)]),
+      timeLimit: new FormControl('5', [Validators.required, Validators.min(1), Validators.max(30)])
     });
   }
 
