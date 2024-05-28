@@ -115,9 +115,9 @@
     justify-content: center;
 }
 
-#solution-title{
+#solution-title {
     align-items: center;
-    font-size: 1.5em;
+    font-size: 2.5em;
 }
 
 #game-screen-message-container {
@@ -142,7 +142,34 @@
 }
 
 @media screen and (max-width: 750px) {
-    #game-board {
-        width: 100%;
+
+    #container {
+        font-size: x-small;
     }
+
+    #game-info-container {
+        font-size: small;
+    }
+
+    #game-board {
+        width: 80%;
+    }
+
+    #main-game-screen-container {
+        flex: 4;
+        flex-direction: column-reverse;
+    }
+
+    #board-control-container {
+        flex-direction: row;
+        padding: 0.2em;
+        flex-wrap: wrap;
+    }
+
+    .board-control-button {
+        margin: 0.2em 0.3em;
+        font-size: 1em;
+        width: 5em;
+    }
+
 }
