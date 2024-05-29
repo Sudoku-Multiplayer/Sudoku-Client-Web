@@ -1,8 +1,10 @@
 <div id="container">
 
-    <div id="board-updates-container">
-        <app-board-updates #boardUpdatesComponent [boardUpdates]="boardUpdates"></app-board-updates>
-    </div>
+    @if (gameScreenSettings.showBoardUpdates) {
+        <div id="board-updates-container">
+            <app-board-updates #boardUpdatesComponent [boardUpdates]="boardUpdates"></app-board-updates>
+        </div>
+    }
 
     <div id="game-container">
         @if(isLoading){
@@ -121,7 +123,9 @@
 
         </div>
 
-        <div id="chat-container">
-            <app-chat #chat [gameChat]="gameChat" (messageEvent)="onPlayerMessage($event)"></app-chat>
-        </div>
+        @if(gameScreenSettings.showGameChat){
+            <div id="chat-container">
+                <app-chat #chat [gameChat]="gameChat" (messageEvent)="onPlayerMessage($event)"></app-chat>
+            </div>
+        }
     </div>
