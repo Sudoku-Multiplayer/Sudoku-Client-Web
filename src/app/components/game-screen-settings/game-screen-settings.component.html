@@ -1,0 +1,32 @@
+<div id="container">
+
+    <div id="game-screen-settings-container">
+        <form [formGroup]="gameScreenSettingsForm" id="game-screen-settings-form" (ngSubmit)="submitForm()">
+
+            <mat-checkbox formControlName="showBoardUpdates" class="form-control">
+                <p id="show-board-updates">Show Board Updates</p>
+            </mat-checkbox>
+
+            <mat-checkbox formControlName="autoScrollBoardUpdates" class="form-control">
+                <p id="auto-scroll-board-updates">Auto Scroll Board Updates</p>
+            </mat-checkbox>
+
+            <mat-checkbox formControlName="showGameChat" class="form-control">
+                <p id="show-game-chat">Show Game Chat</p>
+            </mat-checkbox>
+
+            <mat-checkbox formControlName="autoScrollGameChat" class="form-control">
+                <p id="auto-scroll-game-chat">Auto Scroll Game Chat</p>
+            </mat-checkbox>
+
+            <mat-checkbox formControlName="rememberSettings" class="form-control">
+                <p id="save-settings">Remember Settings</p>
+            </mat-checkbox>
+
+            <button mat-raised-button color="primary" type="submit" class="form-control">
+                Ok
+            </button>
+        </form>
+    </div>
+
+</div>
