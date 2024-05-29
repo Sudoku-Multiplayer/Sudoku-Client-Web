@@ -8,6 +8,7 @@ import { Router } from "@angular/router";
 import { GameType } from "../enums/game-type";
 import { JoinOrHost } from "../enums/join-or-host";
 import { SudokuGame } from "../models/sudoku-game.model";
+import { GameScreenSettings } from "../models/game-screen-settings.model";
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +22,7 @@ export class GameStateService {
     private readonly JOIN_OR_HOST_KEY = "joinorhost";
     private readonly JOINGAMERESPONSE_KEY = "joingameresponse";
     private readonly GAMEID_KEY = "gameid";
+    private readonly GAMESCREENSETTINGS_KEY = "gamescreensettings";
 
     joinGameResponse!: JoinGameResponse;
     private currentPlayer: Player | null = null;
@@ -198,6 +200,29 @@ export class GameStateService {
         this.currentPlayer = null;
         localStorage.removeItem(this.PLAYER_KEY);
         sessionStorage.removeItem(this.PLAYER_KEY);
+    }
+
+    saveGameScreenSettings(gameScreenSettings: GameScreenSettings, localSave: boolean) {
+        if (localSave) {
+            localStorage.setItem(this.GAMESCREENSETTINGS_KEY, JSON.stringify(gameScreenSettings));
+        }
+        else {
+            sessionStorage.setItem(this.GAMESCREENSETTINGS_KEY, JSON.stringify(gameScreenSettings));
+        }
+    }
+
+    getGameScreenSettings(): GameScreenSettings {
+        let gameScreenSettingsJson = sessionStorage.getItem(this.GAMESCREENSETTINGS_KEY);
+
+        if (!gameScreenSettingsJson) {
+            gameScreenSettingsJson = localStorage.getItem(this.GAMESCREENSETTINGS_KEY);
+        }
+
+        if (gameScreenSettingsJson) {
+            return JSON.parse(gameScreenSettingsJson);
+        }
+
+        return new GameScreenSettings(true, true, true, true);
     }
 
     removeCurrentGameSession() {
