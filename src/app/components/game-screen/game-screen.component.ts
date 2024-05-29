@@ -35,20 +35,26 @@ import { GameSessionStatus } from '../../enums/game-session-status';
 import { JoinStatus } from '../../enums/join-status';
 import { VoteStatus } from '../../enums/vote-status';
 import { VoteRecord } from '../../models/vote-record.model';
+import { MatIconModule } from '@angular/material/icon';
+import { GameScreenSettingsComponent } from '../game-screen-settings/game-screen-settings.component';
+import { GameScreenSettings } from '../../models/game-screen-settings.model';
 
 @Component({
   selector: 'app-game-screen',
   standalone: true,
   templateUrl: './game-screen.component.html',
   styleUrl: './game-screen.component.css',
-  imports: [MainMenuComponent,
+  imports: [
+    MainMenuComponent,
     OptionsComponent,
     GameBoardComponent,
     ChatComponent,
     BoardUpdatesComponent,
     MatProgressSpinnerModule,
     MatButtonModule,
-    CommonModule]
+    CommonModule,
+    MatIconModule
+  ]
 })
 export class GameScreenComponent implements OnInit, OnDestroy {
 
@@ -78,6 +84,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   joinOrHost!: JoinOrHost;
   game!: SudokuGame;
   gameSession!: GameSession;
+  gameScreenSettings!: GameScreenSettings;
 
   boardUpdates: BoardUpdate[] = [];
   gameChat: GameChatMessage[] = [];
@@ -113,6 +120,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
   }
 
   private init() {
+    this.gameScreenSettings = this.gameStateService.getGameScreenSettings();
     this.gameType = this.gameStateService.getGameType()!;
 
     if (this.gameType === GameType.MULTI) {
@@ -132,7 +140,7 @@ export class GameScreenComponent implements OnInit, OnDestroy {
 
               const gameSessionStatus = GameSessionStatus[this.gameSession.gameSessionStatus as unknown as keyof typeof GameSessionStatus];
               this.setGameScreenMessage(gameSessionStatus);
-              if(gameSessionStatus === GameSessionStatus.FINISHED){
+              if (gameSessionStatus === GameSessionStatus.FINISHED) {
                 this.showSolution = true;
               }
               this.startMultiplayerGame();
@@ -199,8 +207,10 @@ export class GameScreenComponent implements OnInit, OnDestroy {
       .subscribe((boardUpdate: BoardUpdate) => {
         this.updateBoard(boardUpdate.value, boardUpdate.row, boardUpdate.column);
         this.boardUpdates.push(boardUpdate);
-        if (this.boardUpdatesViewChild) {
-          this.boardUpdatesViewChild.scrollToLastBoardUpdate();
+        if (this.gameScreenSettings.autoScrollBoardUpdates) {
+          if (this.boardUpdatesViewChild) {
+            this.boardUpdatesViewChild.scrollToLastBoardUpdate();
+          }
         }
       });
 
@@ -251,7 +261,9 @@ export class GameScreenComponent implements OnInit, OnDestroy {
     this.gameChatSubscription = this.gameplayService
       .watchGameChatMessage(this.game.gameId)
       .subscribe((gameChatMessage: GameChatMessage) => {
-        this.chatViewChild.scrollToLastMessage();
+        if (this.gameScreenSettings.autoScrollGameChat) {
+          this.chatViewChild.scrollToLastMessage();
+        }
         this.gameChat.push(gameChatMessage);
       });
 
@@ -484,6 +496,17 @@ export class GameScreenComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  openGameScreenSettingsDialog() {
+    const dialogRef = this.dialog.open(GameScreenSettingsComponent);
+
+    dialogRef.componentInstance.settingsSubmited.subscribe(gameScreenSettings => {
+      if (gameScreenSettings) {
+        this.gameScreenSettings = gameScreenSettings;
+      }
+      dialogRef.close();
+    });
   }
 
   isHostPlayer(player: Player): boolean {
