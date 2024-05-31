@@ -42,10 +42,10 @@ export class AuthService {
       .pipe(catchError(this.handleError));
   }
 
-  signup(playerData: PlayerData): Observable<Player> {
+  signup(playerData: PlayerData): Observable<PlayerData> {
     let url: string = this.serverConfig.PLAYER_SERVER_URL + "/signup";
 
-    return this.httpClient.post<Player>(url, playerData)
+    return this.httpClient.post<PlayerData>(url, playerData)
       .pipe(catchError(this.handleError));
   }
 
