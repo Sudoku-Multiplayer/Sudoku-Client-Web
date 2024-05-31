@@ -7,7 +7,9 @@
               [ngClass]="{
                 'correctSolutionTile': currentBoard[i][j] === solution[i][j] && currentBoard[i][j] !== 0, 
                 'incorrectSolutionTile': currentBoard[i][j] !== solution[i][j] && currentBoard[i][j] !== 0,
-                'initialTile': initialBoard[i][j] !== 0
+                'initialTile': initialBoard[i][j] !== 0,
+                'border-right': (j + 1) > 0 && (j + 1) < boardSize && (j + 1) % sqrtBoardSize === 0,
+                'border-down': (i + 1) > 0 && (i + 1) < boardSize && (i + 1) % sqrtBoardSize === 0
               }"
               [value]="showOriginalCellValue(i, j) ? currentBoard[i][j] : solution[i][j]" 
               (mouseenter)="onCellHover(i, j, true)" 
@@ -26,7 +28,11 @@
         @for (num of row; let j = $index; track j) {
           <mat-grid-tile>
             <input type="number" inputmode="numeric" class="tile" 
-              [ngClass]="{'initialTile': initialBoard[i][j] !== 0}"
+              [ngClass]="{
+                'initialTile': initialBoard[i][j] !== 0,
+                'border-right': (j + 1) > 0 && (j + 1) < boardSize && (j + 1) % sqrtBoardSize === 0,
+                'border-down': (i + 1) > 0 && (i + 1) < boardSize && (i + 1) % sqrtBoardSize === 0
+                }"
               [value]="currentBoard[i][j] === 0 ? '' : currentBoard[i][j]" 
               [disabled]="initialBoard[i][j] !== 0"
               (keydown)="tileKeyDown($event, i, j)"
