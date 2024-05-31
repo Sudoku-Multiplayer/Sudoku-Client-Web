@@ -262,7 +262,9 @@ export class GameScreenComponent implements OnInit, OnDestroy {
       .watchGameChatMessage(this.game.gameId)
       .subscribe((gameChatMessage: GameChatMessage) => {
         if (this.gameScreenSettings.autoScrollGameChat) {
-          this.chatViewChild.scrollToLastMessage();
+          if (this.chatViewChild) {
+            this.chatViewChild.scrollToLastMessage();
+          }
         }
         this.gameChat.push(gameChatMessage);
       });
