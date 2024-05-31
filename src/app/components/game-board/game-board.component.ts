@@ -28,6 +28,7 @@ export class GameBoardComponent implements OnInit {
   utilService: UtilService = inject(UtilService);
 
   boardSize!: number;
+  sqrtBoardSize!: number;
   hoveredCell: { i: number; j: number; } | null = null;
 
   constructor() {
@@ -35,6 +36,7 @@ export class GameBoardComponent implements OnInit {
 
   ngOnInit() {
     this.boardSize = this.currentBoard.length;
+    this.sqrtBoardSize = Math.round(Math.sqrt(this.boardSize));
   }
 
   tileKeyDown(event: KeyboardEvent, i: number, j: number) {
