@@ -55,8 +55,14 @@
     text-align: center;
 }
 
-#menu-title{
+#menu-title {
     font-size: 2em;
     padding: 0;
     margin: 0;
+}
+
+#coming-soon-text {
+    color: rgb(227, 0, 0);
+    text-decoration: underline;
+    pointer-events: none;
 }

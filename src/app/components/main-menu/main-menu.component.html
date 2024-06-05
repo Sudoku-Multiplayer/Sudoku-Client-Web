@@ -16,8 +16,10 @@
 
         <div id="menu-button-container">
 
-            <button mat-raised-button class="menu-button" color="accent" (click)="singlePlayerGame()">
+            <button mat-raised-button class="menu-button" color="accent" disabled (click)="singlePlayerGame()">
                 Single Player
+                <br>
+                <span id="coming-soon-text">Coming Soon</span>
             </button>
 
             <button mat-raised-button class="menu-button" color="accent" (click)="multiPlayerGame()">
