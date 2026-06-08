@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../services/auth.service';
 import { Player } from '../../models/player.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -24,6 +25,7 @@ import { GameStateService } from '../../services/game-state.service';
     MatIconModule,
     MatFormFieldModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule,
     MatDividerModule,
     CommonModule,
@@ -43,6 +45,7 @@ export class LoginComponent implements OnInit {
   router: Router = inject(Router);
 
   hidePassword: boolean = true;
+  isConnecting: boolean = false;
 
   constructor() {
     if (this.authService.isLoggedIn()) {
@@ -69,10 +72,12 @@ export class LoginComponent implements OnInit {
     const password = loginFormValue.password;
 
     const loginRequest: LoginRequest = new LoginRequest(email, password);
+    this.isConnecting = true;
 
     this.authService.login(loginRequest)
       .subscribe({
         next: (player: Player) => {
+          this.isConnecting = false;
           if (loginFormValue.rememberMe) {
             this.gameStateService.savePlayer(player, true);
           }
@@ -84,6 +89,7 @@ export class LoginComponent implements OnInit {
         },
 
         error: (err) => {
+          this.isConnecting = false;
           this.uiUtilService.showSnackBar(err, "Ok", 8);
         }
       });
@@ -94,14 +100,17 @@ export class LoginComponent implements OnInit {
     const guestFormValue = this.guestForm.value;
 
     const guestName = guestFormValue.guestName;
+    this.isConnecting = true;
 
     this.authService.loginGuestPlayer(guestName)
       .subscribe({
         next: (guestPlayer: Player) => {
+          this.isConnecting = false;
           this.gameStateService.savePlayer(guestPlayer, false);
           this.router.navigate(['main-menu']);
         },
         error: (error) => {
+          this.isConnecting = false;
           this.uiUtilService.showSnackBar(error, "Ok", 8);
         }
       });
