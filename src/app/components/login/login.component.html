@@ -14,11 +14,22 @@
 
         <div id="login-container">
 
+            @if (isConnecting) {
+            <div class="login-loader">
+                <mat-spinner diameter="60"></mat-spinner>
+
+                <p>
+                    Connecting to server...<br>
+                    This may take a few minutes. Please wait.
+                </p>
+            </div>
+            }
+
             <form [formGroup]="loginForm" id="login-form" (ngSubmit)="login()">
                 <mat-form-field>
                     <mat-label>Email:</mat-label>
                     <input matInput formControlName="email">
-                    <small class="form-error" *ngIf="loginForm.controls['email'].errors?.['required'] && 
+                    <small class="form-error" *ngIf="loginForm.controls['email'].errors?.['required'] &&
                         loginForm.controls['email'].touched">
                         Email is required.
                     </small>
@@ -34,7 +45,7 @@
                         [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
                         <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
-                    <small class="form-error" *ngIf="loginForm.controls['password'].errors?.['required'] && 
+                    <small class="form-error" *ngIf="loginForm.controls['password'].errors?.['required'] &&
                         loginForm.controls['password'].touched">
                         Password is required.
                     </small>
@@ -44,10 +55,9 @@
                     <p id="remember-me">remember me.</p>
                 </mat-checkbox>
 
-                <button mat-raised-button color="primary" [disabled]="loginForm.invalid" type="submit">
+                <button mat-raised-button color="primary" [disabled]="isConnecting || loginForm.invalid" type="submit">
                     Log in
                 </button>
-
             </form>
 
             <mat-divider [vertical]="true"></mat-divider>
@@ -61,14 +71,15 @@
                 <mat-form-field>
                     <mat-label>Guest Name:</mat-label>
                     <input matInput formControlName="guestName">
-                    <small class="form-error" *ngIf="guestForm.controls['guestName'].errors?.['required'] && 
+                    <small class="form-error" *ngIf="guestForm.controls['guestName'].errors?.['required'] &&
                         guestForm.controls['guestName'].touched">
                         Guest Name is required.
                     </small>
                 </mat-form-field>
 
-                <button mat-raised-button color="primary" [disabled]="guestForm.invalid" type="submit">Continue as
-                    Guest</button>
+                <button mat-raised-button color="primary" [disabled]="isConnecting || guestForm.invalid" type="submit">
+                    Continue as Guest
+                </button>
 
             </form>
 
@@ -76,8 +87,11 @@
 
         <div id="signup-container">
             <p id="no-account">Don't have an account?</p>
-            <button mat-raised-button color="primary" [routerLink]="['/signup']">Signup</button>
+            <button mat-raised-button color="primary" [routerLink]="['/signup']">
+                Signup
+            </button>
         </div>
+
     </div>
 
     <button mat-raised-button id="about-button" color="primary" (click)="about()">
