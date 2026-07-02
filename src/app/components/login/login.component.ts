@@ -17,11 +17,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPseudoCheckbox } from '@angular/material/core';
 import { PlayerType } from '../../enums/player-type';
 import { GameStateService } from '../../services/game-state.service';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [MatInputModule,
+    MatTabsModule,
     MatIconModule,
     MatFormFieldModule,
     MatButtonModule,

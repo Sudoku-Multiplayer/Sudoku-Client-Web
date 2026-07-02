@@ -1,101 +1,202 @@
 <div id="container">
 
-    <div id="app-title-container">
-        <p id="app-title">
-            Sudoku Multiplayer
-        </p>
-    </div>
+    <div id="background-grid"></div>
 
-    <div id="wrapper">
+    <div id="login-card">
 
-        <div id="login-title-container">
-            <p id="login-title">Login</p>
+        <div id="header">
+
+            <h1 id="app-title">
+                Sudoku Multiplayer
+            </h1>
+
+            <p id="app-subtitle">
+                Challenge Players Around The World
+            </p>
+
         </div>
 
-        <div id="login-container">
+        @if (isConnecting) {
+        <div class="login-loader">
 
-            @if (isConnecting) {
-            <div class="login-loader">
-                <mat-spinner diameter="60"></mat-spinner>
+            <mat-spinner diameter="60"></mat-spinner>
 
-                <p>
-                    Connecting to server...<br>
+            <p>
+                 Connecting to server...<br>
                     This may take a few minutes. Please wait.
-                </p>
-            </div>
-            }
-
-            <form [formGroup]="loginForm" id="login-form" (ngSubmit)="login()">
-                <mat-form-field>
-                    <mat-label>Email:</mat-label>
-                    <input matInput formControlName="email">
-                    <small class="form-error" *ngIf="loginForm.controls['email'].errors?.['required'] &&
-                        loginForm.controls['email'].touched">
-                        Email is required.
-                    </small>
-                    <small class="form-error" *ngIf="loginForm.controls['email'].errors?.['email']">
-                        Email must be valid.
-                    </small>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Password:</mat-label>
-                    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
-                    <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                    <small class="form-error" *ngIf="loginForm.controls['password'].errors?.['required'] &&
-                        loginForm.controls['password'].touched">
-                        Password is required.
-                    </small>
-                </mat-form-field>
-
-                <mat-checkbox formControlName="rememberMe">
-                    <p id="remember-me">remember me.</p>
-                </mat-checkbox>
-
-                <button mat-raised-button color="primary" [disabled]="isConnecting || loginForm.invalid" type="submit">
-                    Log in
-                </button>
-            </form>
-
-            <mat-divider [vertical]="true"></mat-divider>
-
-            <form [formGroup]="guestForm" id="guest-form" (ngSubmit)="guestLogin()">
-
-                <div id="guest-login-title">
-                    or Guest Login
-                </div>
-
-                <mat-form-field>
-                    <mat-label>Guest Name:</mat-label>
-                    <input matInput formControlName="guestName">
-                    <small class="form-error" *ngIf="guestForm.controls['guestName'].errors?.['required'] &&
-                        guestForm.controls['guestName'].touched">
-                        Guest Name is required.
-                    </small>
-                </mat-form-field>
-
-                <button mat-raised-button color="primary" [disabled]="isConnecting || guestForm.invalid" type="submit">
-                    Continue as Guest
-                </button>
-
-            </form>
+            </p>
 
         </div>
+        }
 
-        <div id="signup-container">
-            <p id="no-account">Don't have an account?</p>
-            <button mat-raised-button color="primary" [routerLink]="['/signup']">
-                Signup
-            </button>
+        <mat-tab-group animationDuration="300ms">
+
+            <!-- LOGIN TAB -->
+
+            <mat-tab label="Login">
+
+                <form
+                    [formGroup]="loginForm"
+                    id="login-form"
+                    (ngSubmit)="login()">
+
+                    <mat-form-field appearance="outline">
+
+                        <mat-label>Email</mat-label>
+
+                        <input
+                            matInput
+                            formControlName="email">
+
+                        <small
+                            class="form-error"
+                            *ngIf="loginForm.controls['email'].errors?.['required']
+                            && loginForm.controls['email'].touched">
+
+                            Email is required.
+
+                        </small>
+
+                        <small
+                            class="form-error"
+                            *ngIf="loginForm.controls['email'].errors?.['email']">
+
+                            Enter a valid email.
+
+                        </small>
+
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+
+                        <mat-label>Password</mat-label>
+
+                        <input
+                            matInput
+                            [type]="hidePassword ? 'password' : 'text'"
+                            formControlName="password">
+
+                        <button
+                            type="button"
+                            mat-icon-button
+                            matSuffix
+                            (click)="hidePassword = !hidePassword">
+
+                            <mat-icon>
+                                {{hidePassword ? 'visibility_off' : 'visibility'}}
+                            </mat-icon>
+
+                        </button>
+
+                        <small
+                            class="form-error"
+                            *ngIf="loginForm.controls['password'].errors?.['required']
+                            && loginForm.controls['password'].touched">
+
+                            Password is required.
+
+                        </small>
+
+                    </mat-form-field>
+
+                    <mat-checkbox formControlName="rememberMe">
+                        Remember me
+                    </mat-checkbox>
+
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        class="action-button"
+                        [disabled]="loginForm.invalid || isConnecting"
+                        type="submit">
+
+                        Login
+
+                    </button>
+
+                </form>
+
+            </mat-tab>
+
+            <!-- GUEST TAB -->
+
+            <mat-tab label="Guest">
+
+                <form
+                    [formGroup]="guestForm"
+                    id="guest-form"
+                    (ngSubmit)="guestLogin()">
+
+                    <div class="guest-header">
+
+                        <h3>Play Instantly</h3>
+
+                        <p>
+                            No account required.
+                        </p>
+
+                    </div>
+
+                    <mat-form-field appearance="outline">
+
+                        <mat-label>Guest Name</mat-label>
+
+                        <input
+                            matInput
+                            formControlName="guestName">
+
+                        <small
+                            class="form-error"
+                            *ngIf="guestForm.controls['guestName'].errors?.['required']
+                            && guestForm.controls['guestName'].touched">
+
+                            Guest name is required.
+
+                        </small>
+
+                    </mat-form-field>
+
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        class="action-button"
+                        [disabled]="guestForm.invalid || isConnecting"
+                        type="submit">
+
+                        Play Now
+
+                    </button>
+
+                </form>
+
+            </mat-tab>
+
+        </mat-tab-group>
+
+        <div id="footer">
+
+            <p>
+                Don't have an account?
+            </p>
+
+            <a routerLink="/signup">
+                Create Account
+            </a>
+
         </div>
 
     </div>
 
-    <button mat-raised-button id="about-button" color="primary" (click)="about()">
-        About
+    <button
+        mat-mini-fab
+        color="primary"
+        id="about-button"
+        (click)="about()">
+
+        <mat-icon>
+            info
+        </mat-icon>
+
     </button>
 
 </div>
