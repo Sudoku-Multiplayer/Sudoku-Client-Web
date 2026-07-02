@@ -26,6 +26,7 @@ export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
   passwordHide: boolean = true;
   confirmPasswordHide: boolean = true;
+  isSigningUp: boolean = false;
 
   authService: AuthService = inject(AuthService);
   gameStateService: GameStateService = inject(GameStateService);

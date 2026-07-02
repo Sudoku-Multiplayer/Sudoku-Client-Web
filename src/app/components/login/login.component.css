@@ -1,148 +1,226 @@
 #container {
+    position: relative;
+
     display: flex;
-    align-items: center;
-    flex-direction: column;
     justify-content: center;
-    height: 100%;
-    width: 100%;
-    background-color: #5c5a46;
+    align-items: center;
+
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #1e293b,
+            #111827
+        );
 }
 
-#app-title-container {
-    display: flex;
+/* Sudoku Grid Background */
+#background-grid {
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,0.04) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.04) 1px,
+            transparent 1px
+        );
+
+    background-size: 60px 60px;
+
+    pointer-events: none;
+}
+
+/* Card */
+#login-card {
+    position: relative;
+    z-index: 1;
+
+    font-size: clamp(0.85rem, 1.2vi, 1.05rem); 
+    width: 26.6em; 
+    max-width: 92vw;
+    height: auto;
+    max-height: 85vh;
+
+    padding: 1.9em 2em;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 1.35em;
+}
+
+/* Make the tab area scrollable */
+#login-card > mat-tab-group {
+    grid-row: 2;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0;
+}
+
+/* Header */
+#header {
+    text-align: center;
+    margin-bottom: 0.3em;
 }
 
 #app-title {
-    font-size: 2.5em;
-    margin-top: 0;
-    margin-bottom: 0.2em;
-    color: rgb(144, 158, 20);
-}
-
-#wrapper {
-    display: flex;
-    flex-direction: column;
-    padding: 0.2em;
-    border-radius: 1em;
-    border: 0.2em solid rgb(150, 149, 60);
-    width: fit-content;
-    align-items: center;
-    background-color: rgb(174, 170, 135);
-
-}
-
-#login-container {
-    display: flex;
-    position: relative;
-    flex-direction: row;
-    border-radius: 1em;
-    border: 0.2em solid rgb(150, 149, 60);
-    padding: 0.5em;
-    justify-content: space-around;
-    align-items: center;
-    background-color: rgb(174, 170, 135);
-}
-
-.login-loader {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    gap: 1rem;
-
-    padding: 1rem;
-    border-radius: 1em;
-
-    background: rgba(255, 255, 255, 0.92);
-    text-align: center;
-}
-
-.login-loader p {
     margin: 0;
-    line-height: 1.4;
-    text-align: center;
-    color: #333;
+    font-size: 2.2em;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 2px;
 }
 
-#login-title-container {
-    height: fit-content;
-    font-size: 1.8em;
-    text-align: center;
+#app-subtitle {
+    margin-top: 0.5em;
+    color: #cbd5e1;
+    font-size: 0.95em;
 }
 
-#login-title {
-    height: fit-content;
-    margin: 0;
-}
-
-#guest-login-title {
-    font-size: 1.8em;
-    margin-bottom: 1em;
-}
-
+/* Forms */
 #login-form,
 #guest-form {
     display: flex;
     flex-direction: column;
-    margin: 0.3em;
-    padding: 0.3em;
+    gap: 0.9em;
+    padding: 0.8em 0.2em;
+}
+
+/* Compact Angular Material Inputs */
+::ng-deep .mat-mdc-text-field-wrapper {
+    max-height: 4em !important;
+}
+
+/* REDUCE SUBSCRIPT WRAPPER HEIGHT:
+   Angular Material defaults this box to a padding/height footprint.
+   By reducing the internal structure, fields sit closer together vertically.
+*/
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    box-sizing: border-box !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+::ng-deep .mat-mdc-form-field-bottom-align {
+    margin-top: -0.5em !important; /* Shaves vertical gap down compactly */
 }
 
 mat-checkbox {
-    margin-bottom: 0.5em;
+    color: white;
+    margin: 0.1em 0;
 }
 
-#remember-me {
-    color: black;
-    font-size: 1.5em;
+/* Buttons */
+.action-button {
+    height: 3.2em;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0 1rem;
+    font-size: 0.95em;
+}
+
+/* Guest */
+.guest-header {
+    text-align: center;
+    margin-bottom: 0.4em;
+}
+
+.guest-header h3 {
+    margin: 0 0 0.2em 0;
+    color: white;
+    font-size: 1.2em;
+}
+
+.guest-header p {
+    color: #cbd5e1;
+    margin: 0;
+    font-size: 0.9em;
+}
+
+::ng-deep .mat-mdc-form-field-bottom-align::before {
+    display: none !important;
+}
+
+/* Footer */
+#footer {
+    padding-top: 0.3em;
+    text-align: center;
+}
+
+#footer p {
+    color: #cbd5e1;
+    margin: 0 0 0.2em 0;
+    font-size: 0.9em;
+}
+
+#footer a {
+    color: #60a5fa;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+#footer a:hover {
+    text-decoration: underline;
+}
+
+/* Errors */
+.form-error {
+    color: #ff6b6b;
+    font-size: 0.8em;
+    display: block;
+    margin-top: 0.2em;
+}
+
+/* Loader */
+.login-loader {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 24px;
+    background: rgba(15,23,42,0.95);
+    color: white;
+    text-align: center;
+    padding: 2em;
+}
+
+.login-loader p {
     margin: 0;
 }
 
-#guest-form {
-    margin-top: auto;
-}
-
-mat-divider {
-    width: 0.1em;
-    height: 100%;
-    border: 0.2em solid rgb(150, 149, 60);
-}
-
-#no-account {
-    margin: 0.1em;
-}
-
-#signup-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-button:hover {
-    background-color: #fff069;
-}
-
-.form-error {
-    color: red;
-}
-
+/* About Button */
 #about-button {
     position: absolute;
-    right: 4em;
-    bottom: 2.8em;
+    bottom: 1.5rem;
+    right: 1.5rem;
 }
 
-@media screen and (max-width: 480px) {
-    #login-container {
-        flex-direction: column;
-    }
-
-    mat-divider {
-        visibility: hidden;
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    #login-card {
+        width: 95vw;
+        max-height: 92vh;
+        padding: 1.25rem;
+        font-size: 0.9rem;
     }
 }
