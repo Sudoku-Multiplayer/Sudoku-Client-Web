@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: 'signup', component: SignupComponent, title: "Signup" },
     { path: 'options', component: OptionsComponent, title: "Options" },
     { path: 'settings', component: SettingsComponent, title: "Settings" },
-    { path: 'multiplayer-screen', component: MultiplayerScreenComponent, title: "Multiplayer" },
+    { path: 'multiplayer-screen', component: MultiplayerScreenComponent, title: "Multiplayer", canActivate: [authGuard] },
     { path: 'game-screen', component: GameScreenComponent, title: "Game", canActivate: [gameScreenGuard] },
     { path: '**', redirectTo: "main-menu", pathMatch: "full" }
 ];
